@@ -1,14 +1,7 @@
 #include "TComplejo.h"
+#include <math.h>
+#define _USE_MATH_DEFINES
 //#include "../include/TComplejo.h"
-
-double re;
-double im;
-
-TComplejo::TComplejo()
-{
-    re = 0.0;
-    im = 0.0;
-}
 
 TComplejo::~TComplejo()
 {
@@ -16,13 +9,7 @@ TComplejo::~TComplejo()
     im = 0.0;
 }
 
-
-TComplejo::TComplejo(double re)
-{
-    this->re = re;
-}
-
-TComplejo::TComplejo(double re , double im){
+TComplejo::TComplejo(double re = 0.0 , double im = 0.0){
     this->re = re;
     this->im = im;
 
@@ -117,21 +104,34 @@ void TComplejo::Im(double im){
 }
 
 double TComplejo::Arg(){
-    double result; 
-
-    if(re == 0.0 && im == 0.0){
-        result = 0.0;
-    }else if( re == 0.0 && im > 0.0){
-    //result = pi()/2;
-    }else if( re == 0.0 && im < 0.0){
-    //result = 3*pi()/2;
-    }else{
-    result = atan2(im,re);
-    }
+    double result = atan2(im,re);
+    
     return result;
   
 }
 
 double TComplejo::Mod(){
-
+    double result = sqrt(pow(re,2) + pow(im,2));
+    return result;
 }
+
+ostream& operator<<(ostream& os, TComplejo& complejo){
+    os<<"("<<complejo.Re()<<" "<<complejo.Im()<<")";
+    return os;
+}
+
+TComplejo operator+(double re, TComplejo complejo){
+    complejo.Re(re + complejo.Re());
+    return complejo;
+}
+
+TComplejo operator-(double re, TComplejo complejo) { 
+    complejo.Re(re - complejo.Re());
+    return complejo;
+}
+
+TComplejo operator*(double re, TComplejo complejo) {
+    complejo.Re(re * complejo.Re());
+    return complejo;
+}
+

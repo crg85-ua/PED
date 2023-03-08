@@ -6,49 +6,45 @@ using namespace std;
 
 class TComplejo
 {
-private:
-    double re;
-    double im;
-public:
-    TComplejo();
+    private:
+        double re;
+        double im;
+    public:
+        ~TComplejo();
 
-    ~TComplejo();
+        TComplejo(double = 0.0 , double = 0.0);
 
-    TComplejo(double);
+        TComplejo(TComplejo&);
 
-    TComplejo(double , double);
+        TComplejo& operator=(TComplejo&);
 
-    TComplejo(TComplejo&);
+        TComplejo operator+ (TComplejo&);
+        TComplejo operator- (TComplejo&);
+        TComplejo operator* (TComplejo&);
+        TComplejo operator+ (double);
+        TComplejo operator- (double);
+        TComplejo operator* (double);
 
-    TComplejo& operator=(TComplejo&);
+        bool operator== (TComplejo&);
+        bool operator!= (TComplejo&);
 
-    TComplejo operator+ (TComplejo&);
-    TComplejo operator- (TComplejo&);
-    TComplejo operator* (TComplejo&);
-    TComplejo operator+ (double);
-    TComplejo operator- (double);
-    TComplejo operator* (double);
+        double Re();
+        double Im();
 
-    bool operator== (TComplejo&);
-    bool operator!= (TComplejo&);
+        void Re(double);
+        void Im(double);
 
-    double Re();
-    double Im();
+        double Arg(void);
+        double Mod(void);
 
-    void Re(double);
-    void Im(double);
+        friend ostream& operator<<(ostream&, TComplejo&);
 
-    double Arg(void);
-    double Mod(void);
-
-    friend ostream & operator<<(ostream &, TComplejo &);
-
-    friend TComplejo operator+ (double, TComplejo&);
-    friend TComplejo operator- (double, TComplejo&);
-    friend TComplejo operator* (double, TComplejo&);
+        friend TComplejo operator+ (double, TComplejo&);
+        friend TComplejo operator- (double, TComplejo&);
+        friend TComplejo operator* (double, TComplejo&);
 
 
 
 };
 
-#endif;
+#endif
