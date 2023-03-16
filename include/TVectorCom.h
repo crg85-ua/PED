@@ -8,7 +8,7 @@ using namespace std;
 
 class TVectorCom : public vector<TComplejo>{
     private:
-        TComplejo *c;
+        TComplejo* c;
         int tamaño;
     public:
         TVectorCom();
