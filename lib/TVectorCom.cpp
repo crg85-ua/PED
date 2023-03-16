@@ -67,10 +67,11 @@ int TVectorCom::Tamaño(){
 
 int TVectorCom::Ocupadas(){
     int cantidadOcupadas = 0;
-    
+    TComplejo complejo;
     for (int i = 0; i > tamaño; i++)
     {
-        if((c+i)->Im() != 0 && (c+i)->Re() != 0){
+        complejo = *(this->c + i);
+        if(complejo.Im() != 0 && complejo.Re() != 0){
             cantidadOcupadas++;
         }
     }
@@ -90,5 +91,28 @@ bool TVectorCom::ExisteCom(TComplejo& complejo){
 }
 
 void TVectorCom::MostrarComplejos(double arg){
-    
+    TComplejo complejo;
+    cout << "[ ";
+    for(int i = 0; i < tamaño; i++){
+        complejo = *(this->c + i);
+
+        if(complejo.Re() > arg || complejo.Re() == arg){
+            cout << *(this->c + i) << ", ";
+        }
+       
+    }
+    cout << " ]" << endl;
+}
+
+bool TVectorCom::Redimensionar(int nuevoTamaño){
+    if(nuevoTamaño == 0 || nuevoTamaño < 0){
+        return false;
+    } else if(nuevoTamaño == tamaño){
+        return false;
+    } else if(nuevoTamaño > 0 && nuevoTamaño > tamaño){
+        TVectorCom nuevoVector;
+        
+
+    }
+
 }
