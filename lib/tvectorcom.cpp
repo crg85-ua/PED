@@ -1,6 +1,6 @@
 
-#include "TComplejo.h"
-#include "TVectorCom.h"
+#include "tcomplejo.h"
+#include "tvectorcom.h"
 
 TVectorCom::TVectorCom(){
     c = new TComplejo();
@@ -110,9 +110,45 @@ bool TVectorCom::Redimensionar(int nuevoTamaño){
     } else if(nuevoTamaño == tamaño){
         return false;
     } else if(nuevoTamaño > 0 && nuevoTamaño > tamaño){
-        TVectorCom nuevoVector;
         
+        for (int i = 0; i < nuevoTamaño; i++)
+        {
+            if (i > tamaño -1)
+            {
+                TComplejo complejo = TComplejo();
+                *(c+i) = complejo;
+            }
+            
+        }
+        tamaño = nuevoTamaño;
+        
+        return true;
 
+    } else if (nuevoTamaño > 0 && nuevoTamaño <tamaño)
+    {
+        TComplejo* nuevoPuntero;
+        for (int i = 0; i < nuevoTamaño; i++)
+        {
+            *(nuevoPuntero+i) = *(c+i);
+        }
+        c = nuevoPuntero;
+        tamaño = nuevoTamaño;
     }
+    
+}
 
+ostream& operator<<(ostream& os, TVectorCom& vector){
+    os << "[" ;
+    if (vector.Tamaño() == 0)
+    {
+        os << "]";
+    } else
+    {
+        for (int i = 1; i = vector.Tamaño(); i++)
+        {
+            os << "(" << i << ") " << *(vector.c + (i-1)) << ", ";
+        }
+    }  
+    
+    
 }

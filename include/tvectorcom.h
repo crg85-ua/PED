@@ -1,7 +1,7 @@
 #ifndef _TVECTOR_H_
 #define _TVECTOR_H_
 #include<iostream>
-#include "TComplejo.h"
+#include "tcomplejo.h"
 #include <vector>
 
 using namespace std;
