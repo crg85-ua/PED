@@ -21,6 +21,8 @@ class TListaNodo{
         ~TListaNodo();
 
         TListaNodo& operator=(TListaNodo&);
+        
+        bool operator!=(TListaNodo&);
 };
 
 class TListaPos{
@@ -57,6 +59,8 @@ class TListaCom{
         TListaCom(TListaCom&);
 
         ~TListaCom();
+
+        TListaCom& operator=(TListaCom&);
 
         bool operator==(TListaCom&);
 
