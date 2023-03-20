@@ -140,7 +140,7 @@ bool TListaCom::operator!=(TListaCom& lista){
 }
 
 TListaCom TListaCom::operator+(TListaCom& lista){
-
+        
 
 }
 
