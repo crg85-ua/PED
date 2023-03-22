@@ -9,7 +9,7 @@ TComplejo::~TComplejo()
     im = 0.0;
 }
 
-TComplejo::TComplejo(double re = 0.0 , double im = 0.0){
+TComplejo::TComplejo(double re, double im){
     this->re = re;
     this->im = im;
 
@@ -42,23 +42,24 @@ TComplejo TComplejo::operator-(TComplejo& numComplejo){
 
 TComplejo TComplejo::operator*(TComplejo& numComplejo){
     re = re * numComplejo.re;
-    im = im * numComplejo.im;
+    if(numComplejo.im != 0)
+        im = im * numComplejo.im;
     return *this;
 }
 
 TComplejo TComplejo::operator+(double numReal){
-    re = re + numReal;
-    return *this;
+    TComplejo real(numReal);
+    return this->operator+(real);
 }
 
 TComplejo TComplejo::operator-(double numReal){
-    re = re - numReal;
-    return *this;
+    TComplejo real(numReal);
+    return this->operator-(real);
 }
 
 TComplejo TComplejo::operator*(double numReal){
-    re = re * numReal;
-    return *this;
+    TComplejo real(numReal);
+    return this->operator*(real);
 }
 
 //Otros operadores
