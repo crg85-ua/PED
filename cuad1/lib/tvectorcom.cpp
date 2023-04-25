@@ -8,7 +8,7 @@ TVectorCom::TVectorCom() : error(){
 }
 
 TVectorCom::TVectorCom(int tamaño) : error(){
-    c = new TComplejo[tamaño];
+    c = new TComplejo();
     this->tamaño = tamaño;
 }
 
@@ -149,11 +149,10 @@ ostream& operator<<(ostream& os, TVectorCom& vector){
         os << "]";
     } else
     {
-        for (int i = 0; i < vector.Tamaño(); i++)
+        for (int i = 1; i = vector.Tamaño(); i++)
         {
-            os << "(" << i + 1 << ") " << vector.c[i] << ", ";
+            os << "(" << i << ") " << *(vector.c + (i-1)) << ", ";
         }
-        os << "]";
     }  
     return os;
     
