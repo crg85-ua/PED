@@ -68,5 +68,5 @@ bool EsVacio(){
 }
 
 TComplejo TABBCom::Raiz(){
-    
+    return this->nodo->item;
 }
