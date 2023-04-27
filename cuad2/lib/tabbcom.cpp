@@ -151,11 +151,22 @@ TComplejo TABBCom::Raiz(){
 }
 
 int TABBCom::Altura(){
-
+    if (this->EsVacio())
+    {
+        return 0;
+    }else{
+        return 1 + max(this->nodo->iz.Altura(),this->nodo->de.Altura());
+    }
 }
 
 int TABBCom::Nodos(){
-
+    if (this->EsVacio())
+    {
+        return 0;
+    }else{
+        return 1 + this->nodo->iz.Nodos() + this->nodo->de.Nodos();
+    }
+    
 }
 
 int TABBCom::NodosHoja(){
