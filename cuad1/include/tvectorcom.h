@@ -9,7 +9,7 @@ using namespace std;
 class TVectorCom : public vector<TComplejo>{
     private:
         TComplejo* c;
-        int tamaño;
+        int tamano;
         TComplejo error;
     public:
         TVectorCom();
@@ -30,7 +30,7 @@ class TVectorCom : public vector<TComplejo>{
 
         TComplejo operator[](int) const;
 
-        int Tamaño();
+        int Tamano();
 
         int Ocupadas();
 

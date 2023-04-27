@@ -4,36 +4,48 @@
 
 TVectorCom::TVectorCom() : error(){
     c = new TComplejo();
-    tamaño = 0;
+    tamano = 0;
 }
 
-TVectorCom::TVectorCom(int tamaño) : error(){
-    c = new TComplejo[tamaño];
-    this->tamaño = tamaño;
+TVectorCom::TVectorCom(int tamano) : error(){   
+    c = new TComplejo[tamano];
+    this->tamano = tamano;
 }
 
 TVectorCom::TVectorCom(TVectorCom& vectorCom) : error(){
-    this->tamaño = vectorCom.tamaño;
-    this->c = vectorCom.c;
+    this->tamano = vectorCom.tamano;
+    this->c = new TComplejo[vectorCom.tamano];
+
+    for (int i = 0; i < tamano; i++)
+    {
+        c[i] = vectorCom.c[i];
+    }
+    
 }
 
 TVectorCom::~TVectorCom(){
     c = new TComplejo();
-    tamaño = 0;
+    tamano = 0;
 }
 
-TVectorCom& TVectorCom::operator=(TVectorCom& vectorCom){
-    this->c = vectorCom.c;
-    this->tamaño = vectorCom.tamaño;
+TVectorCom& TVectorCom::operator=(const TVectorCom& vectorCom) {
+   
+    this->tamano = vectorCom.tamano;
+    this->c = new TComplejo[vectorCom.tamano];
+
+    for (int i = 0; i < tamano; i++)
+    {
+        c[i] = vectorCom.c[i];
+    }
 
     return *this;
 }
 
-bool TVectorCom::operator==(TVectorCom& vectorCom){
+bool TVectorCom::operator==(const TVectorCom& vectorCom) const{
     bool result = true;
-    if (this->tamaño == vectorCom.Tamaño()){
-        for(int i = 0; i < tamaño; i++){
-            if(*(this->c + i) != *(vectorCom.c + i)){
+    if (this->tamano == vectorCom.tamano){
+        for(int i = 0; i < tamano; i++){
+            if(this->c [i] != vectorCom.c[i]){
                 result = false;
                 return result;
             }
@@ -46,10 +58,15 @@ bool TVectorCom::operator==(TVectorCom& vectorCom){
     return result;
 }
 
+bool TVectorCom::operator!=(const TVectorCom& vectorCom) const {
+	return !(*this == vectorCom);
+}
+
+
 TComplejo& TVectorCom::operator[](int pos){
     
-    if(pos>=1 && pos <= tamaño){
-        return *(this->c +(pos -1));    
+    if(pos>=1 && pos <= tamano){
+        return this->c[pos-1];    
     }
     return error;
     
@@ -57,101 +74,101 @@ TComplejo& TVectorCom::operator[](int pos){
 
 TComplejo TVectorCom::operator[](int pos) const{
   
-    if(pos>=1 && pos <= tamaño){
-        return *(this->c +(pos -1));    
+    if(pos>=1 && pos <= tamano){
+        return this->c[pos-1];    
     }else{
         return TComplejo();
     }
 }
 
-int TVectorCom::Tamaño(){
-    return tamaño;
+int TVectorCom::Tamano(){
+    return tamano;
 }
 
 int TVectorCom::Ocupadas(){
     int cantidadOcupadas = 0;
-    TComplejo complejo;
-    for (int i = 0; i > tamaño; i++)
+
+    for (int i = 0; i < this->tamano; i++)
     {
-        complejo = *(this->c + i);
-        if(complejo.Im() != 0 && complejo.Re() != 0){
+        if(this->c[i].Re() != 0 || this->c[i].Im() != 0){
             cantidadOcupadas++;
         }
     }
+
     return cantidadOcupadas;
 }
 
-bool TVectorCom::ExisteCom(TComplejo& complejo){
+bool TVectorCom::ExisteCom(const TComplejo& complejo) const{
     bool result = false;
-    for(int i = 0; i < tamaño; i++){
-        result = *(this->c + i) != complejo;
-        if(result){
-            return result;
-        }
-       
+    for(int i = 0; i < tamano; i++){
+        if(this->c[i] == complejo){
+            result = true;
+        }      
     }
     return result;
 }
 
 void TVectorCom::MostrarComplejos(double arg){
     TComplejo complejo;
-    cout << "[ ";
-    for(int i = 0; i < tamaño; i++){
-        complejo = *(this->c + i);
+    cout << "[";
+    for(int i = 0; i < tamano; i++){
+        complejo = this->c[i];
 
-        if(complejo.Re() > arg || complejo.Re() == arg){
-            cout << *(this->c + i) << ", ";
+        if(complejo.Re() >= arg){
+            cout << this->c[i];
+            if (i != tamano-2)
+                cout << ", ";
+            
         }
        
     }
-    cout << " ]" << endl;
+    cout << "]";
 }
 
-bool TVectorCom::Redimensionar(int nuevoTamaño){
-    if(nuevoTamaño == 0 || nuevoTamaño < 0){
+bool TVectorCom::Redimensionar(int nuevoTamano){
+    if(nuevoTamano == 0 || nuevoTamano < 0){
         return false;
-    } else if(nuevoTamaño == tamaño){
+    } else if(nuevoTamano == tamano){
         return false;
-    } else if(nuevoTamaño > 0 && nuevoTamaño > tamaño){
-        
-        for (int i = 0; i < nuevoTamaño; i++)
-        {
-            if (i > tamaño -1)
-            {
-                TComplejo complejo = TComplejo();
-                *(c+i) = complejo;
-            }
+    } else if(nuevoTamano > 0 && nuevoTamano > tamano){
+        TComplejo* nuevoPuntero = new TComplejo[nuevoTamano];
+        for (int i = 0; i < tamano; i++)
+        {         
+            nuevoPuntero[i] = c[i];          
             
         }
-        tamaño = nuevoTamaño;
+        c = nuevoPuntero;
+        tamano = nuevoTamano;
         
         return true;
 
-    } else if (nuevoTamaño > 0 && nuevoTamaño <tamaño)
+    } else if (nuevoTamano > 0 && nuevoTamano <tamano)
     {
-        TComplejo* nuevoPuntero;
-        for (int i = 0; i < nuevoTamaño; i++)
+        TComplejo* nuevoPuntero = new TComplejo[nuevoTamano];
+        for (int i = 0; i < nuevoTamano; i++)
         {
-            *(nuevoPuntero+i) = *(c+i);
+            nuevoPuntero[i] = c[i];
         }
         c = nuevoPuntero;
-        tamaño = nuevoTamaño;
+        tamano = nuevoTamano;
 
         return true;
     }
     return false;
 }
 
-ostream& operator<<(ostream& os, TVectorCom& vector){
+ostream& operator<<(ostream& os, const TVectorCom& vector){
     os << "[" ;
-    if (vector.Tamaño() == 0)
+    if (vector.tamano == 0)
     {
         os << "]";
     } else
     {
-        for (int i = 0; i < vector.Tamaño(); i++)
+        for (int i = 0; i < vector.tamano; i++)
         {
-            os << "(" << i + 1 << ") " << vector.c[i] << ", ";
+            os << "(" << i + 1 << ") " << vector.c[i];
+            if (i != vector.tamano-1)
+                os << ", ";
         }
         os << "]";
     }  

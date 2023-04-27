@@ -1,7 +1,8 @@
 #include <iostream>
-#include "../include/tvectorcom.h"
 
 using namespace std;
+
+#include "tvectorcom.h"
 
 int
 main(void)

@@ -2,10 +2,10 @@
      CONST. COPIA
 */
 #include <iostream>
-#include "tlistacom.h"
 
 using namespace std;
 
+#include "tlistacom.h"
 
 int
 main(void)

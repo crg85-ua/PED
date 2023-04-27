@@ -11,25 +11,29 @@ class TComplejo
         double im;
     public:
         ~TComplejo();
+        
+        TComplejo();
 
-        TComplejo(double = 0.0 , double = 0.0);
+        TComplejo(double re);
 
-        TComplejo(TComplejo&);
+        TComplejo(double re, double im);
 
-        TComplejo& operator=(TComplejo&);
+        TComplejo(const TComplejo&);
 
-        TComplejo operator+ (TComplejo&);
-        TComplejo operator- (TComplejo&);
-        TComplejo operator* (TComplejo&);
-        TComplejo operator+ (double);
-        TComplejo operator- (double);
-        TComplejo operator* (double);
+        TComplejo& operator=(const TComplejo&);
 
-        bool operator== (TComplejo&);
-        bool operator!= (TComplejo&);
+        TComplejo operator+ (const TComplejo&) const;
+        TComplejo operator- (const TComplejo&) const;
+        TComplejo operator* (const TComplejo&) const;
+        TComplejo operator+ (double) const;
+        TComplejo operator- (double) const;
+        TComplejo operator* (double) const;
 
-        double Re();
-        double Im();
+        bool operator== (const TComplejo&) const;
+        bool operator!= (const TComplejo&) const;
+
+        double Re() const;
+        double Im() const;
 
         void Re(double);
         void Im(double);
@@ -37,11 +41,11 @@ class TComplejo
         double Arg(void);
         double Mod(void);
 
-        friend ostream& operator<<(ostream&, TComplejo&);
+        friend ostream& operator<<(ostream&, const TComplejo&);
 
-        friend TComplejo operator+ (double, TComplejo&);
-        friend TComplejo operator- (double, TComplejo&);
-        friend TComplejo operator* (double, TComplejo&);
+        friend TComplejo operator+ (double, const TComplejo&);
+        friend TComplejo operator- (double, const TComplejo&);
+        friend TComplejo operator* (double, const TComplejo&);
 
 
 

@@ -3,10 +3,20 @@
 #define _USE_MATH_DEFINES
 //#include "../include/TComplejo.h"
 
+TComplejo::TComplejo() {
+	re = 0;
+	im = 0;
+}
+
 TComplejo::~TComplejo()
 {
     re = 0.0;
     im = 0.0;
+}
+
+TComplejo::TComplejo(double re){
+    this->re = re;
+    this->im = 0;
 }
 
 TComplejo::TComplejo(double re, double im){
@@ -15,12 +25,13 @@ TComplejo::TComplejo(double re, double im){
 
 }
 
-TComplejo::TComplejo(TComplejo& numComplejo){
+TComplejo::TComplejo( const TComplejo& numComplejo){
     re = numComplejo.re;
     im = numComplejo.im;
 }
 
-TComplejo& TComplejo::operator=(TComplejo& numComplejo){
+TComplejo& TComplejo::operator=( const TComplejo& numComplejo){
+
     this->re = numComplejo.re;
     this->im = numComplejo.im;
     return *this;
@@ -28,42 +39,48 @@ TComplejo& TComplejo::operator=(TComplejo& numComplejo){
 
 //Sobrecarga de operadores aritmeticos
 
-TComplejo TComplejo::operator+(TComplejo& numComplejo){
-    re = re + numComplejo.re;
-    im = im + numComplejo.im;
-    return *this;
+TComplejo TComplejo::operator+(const TComplejo& numComplejo) const{
+    TComplejo nuevo;
+    nuevo.re = re + numComplejo.re;
+    nuevo.im = im + numComplejo.im;
+    return nuevo;
 }
 
-TComplejo TComplejo::operator-(TComplejo& numComplejo){
-    re = re - numComplejo.re;
-    im = im - numComplejo.im;
-    return *this;
+TComplejo TComplejo::operator-(const TComplejo& numComplejo) const{
+    TComplejo nuevo;
+    nuevo.re = re - numComplejo.re;
+    nuevo.im = im - numComplejo.im;
+    return nuevo;
 }
 
-TComplejo TComplejo::operator*(TComplejo& numComplejo){
-    re = re * numComplejo.re;
+TComplejo TComplejo::operator*(const TComplejo& numComplejo) const{
+    TComplejo nuevo;
+    nuevo.re = re * numComplejo.re;
     if(numComplejo.im != 0)
-        im = im * numComplejo.im;
-    return *this;
+        nuevo.im = im * numComplejo.im;
+    return nuevo;
 }
 
-TComplejo TComplejo::operator+(double numReal){
+TComplejo TComplejo::operator+(double numReal) const{
     TComplejo real(numReal);
     return this->operator+(real);
 }
 
-TComplejo TComplejo::operator-(double numReal){
+TComplejo TComplejo::operator-(double numReal) const{
     TComplejo real(numReal);
     return this->operator-(real);
 }
 
-TComplejo TComplejo::operator*(double numReal){
-    TComplejo real(numReal);
-    return this->operator*(real);
+TComplejo TComplejo::operator*(double numReal) const{
+    TComplejo nuevo;
+    if(numReal != 0)
+        nuevo.re = re * numReal;
+        nuevo.im = im * numReal;
+    return nuevo;
 }
 
 //Otros operadores
-bool TComplejo::operator==(TComplejo& numComplejo){
+bool TComplejo::operator==(const TComplejo& numComplejo) const{
     double resultRe = re - numComplejo.re;
     double resultIm = im - numComplejo.im;
 
@@ -76,7 +93,7 @@ bool TComplejo::operator==(TComplejo& numComplejo){
        
 }
 
-bool TComplejo::operator!=(TComplejo& numComplejo){
+bool TComplejo::operator!=(const TComplejo& numComplejo) const{
     
     double resultRe = re - numComplejo.re;
     double resultIm = im - numComplejo.im;
@@ -89,18 +106,18 @@ bool TComplejo::operator!=(TComplejo& numComplejo){
     }
 }
 
-double TComplejo::Re(){
+double TComplejo::Re() const{
     return re;
 }
-double TComplejo::Im(){
+double TComplejo::Im() const{
     return im;
 }
 
-void TComplejo::Re(double re){
+void TComplejo::Re(double re) {
     this->re = re;
 }
 
-void TComplejo::Im(double im){
+void TComplejo::Im(double im) {
     this->im = im;
 }
 
@@ -116,23 +133,23 @@ double TComplejo::Mod(){
     return result;
 }
 
-ostream& operator<<(ostream& os, TComplejo& complejo){
+ostream& operator<<(ostream& os, const TComplejo& complejo){
     os<<"("<<complejo.Re()<<" "<<complejo.Im()<<")";
     return os;
 }
 
-TComplejo operator+(double re, TComplejo complejo){
-    complejo.Re(re + complejo.Re());
-    return complejo;
+TComplejo operator+(double re, const TComplejo& complejo){
+    TComplejo nuevo = *new TComplejo(re + complejo.Re(), 0+complejo.Im());
+    return nuevo;
 }
 
-TComplejo operator-(double re, TComplejo complejo) { 
-    complejo.Re(re - complejo.Re());
-    return complejo;
+TComplejo operator-(double re, const TComplejo& complejo) { 
+    TComplejo nuevo = *new TComplejo(re - complejo.Re(), 0-complejo.Im());
+    return nuevo;
 }
 
-TComplejo operator*(double re, TComplejo complejo) {
-    complejo.Re(re * complejo.Re());
-    return complejo;
+TComplejo operator*(double re, const TComplejo& complejo) {
+    TComplejo nuevo = *new TComplejo(re * complejo.Re(), re*complejo.Im());
+    return nuevo;
 }
 

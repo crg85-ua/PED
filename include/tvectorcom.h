@@ -9,7 +9,7 @@ using namespace std;
 class TVectorCom : public vector<TComplejo>{
     private:
         TComplejo* c;
-        int tamaño;
+        int tamano;
         TComplejo error;
     public:
         TVectorCom();
@@ -20,26 +20,26 @@ class TVectorCom : public vector<TComplejo>{
 
         ~TVectorCom();
 
-        TVectorCom& operator=(TVectorCom&);
+        TVectorCom& operator=(const TVectorCom&);
 
-        bool operator==(TVectorCom&);
+        bool operator==(const TVectorCom&) const;
 
-        bool operator!=(TVectorCom&);
+        bool operator!=(const TVectorCom&) const;
 
         TComplejo& operator[](int);
 
         TComplejo operator[](int) const;
 
-        int Tamaño();
+        int Tamano();
 
         int Ocupadas();
 
-        bool ExisteCom(TComplejo&);
+        bool ExisteCom(const TComplejo&) const;
 
         void MostrarComplejos(double);
         
         bool Redimensionar(int);
 
-        friend ostream& operator<<(ostream&, TVectorCom&);
+        friend ostream& operator<<(ostream&, const TVectorCom&);
 };
 #endif
