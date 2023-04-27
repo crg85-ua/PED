@@ -1,6 +1,6 @@
 
-#include "../include/tcomplejo.h"
-#include "../include/tvectorcom.h"
+#include "tcomplejo.h"
+#include "tvectorcom.h"
 
 TVectorCom::TVectorCom() : error(){
     c = new TComplejo();

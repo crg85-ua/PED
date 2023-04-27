@@ -36,9 +36,9 @@ class TABBCom{
         TABBCom& operator=(TABBCom&);
         bool operator==(const TABBCom&);
         bool EsVacio();
-        bool Insertar(TComplejo&);
-        bool Borrar(TComplejo&);
-        bool Buscar(TComplejo&);
+        bool Insertar(const TComplejo&);
+        bool Borrar(const TComplejo&);
+        bool Buscar(const TComplejo&);
         TComplejo Raiz();
         int Altura();
         int Nodos();
