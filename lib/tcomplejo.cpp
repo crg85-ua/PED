@@ -1,7 +1,6 @@
 #include "tcomplejo.h"
 #include <math.h>
 #define _USE_MATH_DEFINES
-//#include "../include/TComplejo.h"
 
 TComplejo::TComplejo() {
 	re = 0;

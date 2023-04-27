@@ -17,7 +17,7 @@ class TNodoABB{
         TNodoABB(TNodoABB&);
         ~TNodoABB();
         TNodoABB& operator=(TNodoABB&);
-
+        bool operator==(const TNodoABB&);
         friend class TABBCom;
 
 };
@@ -29,7 +29,12 @@ class TABBCom{
         void PreordenAux(TVectorCom&, int&);
         void PostordenAux(TVectorCom&, int&);
     public:
-        bool operator==(TABBCom&);
+
+        TABBCom();
+        TABBCom(TABBCom&);
+        ~TABBCom();
+        TABBCom& operator=(TABBCom&);
+        bool operator==(const TABBCom&);
         bool EsVacio();
         bool Insertar(TComplejo&);
         bool Borrar(TComplejo&);
