@@ -50,10 +50,12 @@ TABBCom::TABBCom(TABBCom& arbol){
 }
 
 TABBCom::~TABBCom(){
+    free(nodo);
     this->nodo = new TNodoABB();
 }
 
 TABBCom& TABBCom::operator=(TABBCom& arbol){
+    this->nodo->~TNodoABB();
     this->nodo = arbol.nodo;
 }
 
@@ -62,5 +64,9 @@ bool TABBCom::operator==(const TABBCom& arbol){
 }
 
 bool EsVacio(){
+
+}
+
+TComplejo TABBCom::Raiz(){
     
 }
