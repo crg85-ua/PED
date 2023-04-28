@@ -39,7 +39,7 @@ class TComplejo
         void Im(double);
 
         double Arg(void);
-        double Mod(void);
+        double Mod(void) const;
 
         friend ostream& operator<<(ostream&, const TComplejo&);
 

@@ -128,7 +128,7 @@ double TComplejo::Arg(){
   
 }
 
-double TComplejo::Mod(){
+double TComplejo::Mod() const{
     double result = sqrt(pow(re,2) + pow(im,2));
     return result;
 }

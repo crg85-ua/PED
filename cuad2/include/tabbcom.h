@@ -4,7 +4,7 @@
 #include "tcomplejo.h"
 #include "tvectorcom.h"
 #include <vector>
-
+#include <queue>
 
 using namespace std;
 
@@ -17,7 +17,6 @@ class TNodoABB{
         TNodoABB(TNodoABB&);
         ~TNodoABB();
         TNodoABB& operator=(TNodoABB&);
-        bool operator==(const TNodoABB&);
         friend class TABBCom;
 
 };
@@ -35,7 +34,7 @@ class TABBCom{
         ~TABBCom();
         TABBCom& operator=(TABBCom&);
         bool operator==(const TABBCom&);
-        bool EsVacio();
+        bool EsVacio() const;
         bool Insertar(const TComplejo&);
         bool Borrar(const TComplejo&);
         bool Buscar(const TComplejo&);
@@ -47,7 +46,8 @@ class TABBCom{
         TVectorCom Preorden();
         TVectorCom Postorden();
         TVectorCom Niveles();
-
+        TABBCom& Copia(const TABBCom&);
+        TNodoABB* BuscarMaximo(TABBCom arbol);
         friend ostream & operator<<(ostream&, TABBCom&);
 
         friend class TNodoABB;
