@@ -46,20 +46,63 @@ TABBCom& TABBCom::operator=(TABBCom& arbol){
     Copia(arbol);
 }
 
-bool TABBCom::operator==(const TABBCom& arbol){
-    // se conoce con una funcion de recorrido
+bool TABBCom::operator==(TABBCom& arbol){
+    return this->Inorden() == arbol.Inorden();
 }
 
 void TABBCom::InordenAux(TVectorCom& vector, int& num){
+    if (!this->EsVacio())
+    {
+        if (this->nodo->iz.EsVacio() && this->nodo->de.EsVacio())
+        {
+            vector[num] = this->nodo->item;
+            num++;
+        }else
+        {
+            this->nodo->iz.InordenAux(vector,num);
+            vector[num] = this->nodo->item;
+            num++;
+            this->nodo->de.InordenAux(vector,num);
+        }        
+        
+    }   
 
 }
 
 void TABBCom::PreordenAux(TVectorCom& vector, int& num){
-
+    if (!this->EsVacio())
+    {
+        if (this->nodo->iz.EsVacio() && this->nodo->de.EsVacio())
+        {
+            vector[num] = this->nodo->item;
+            num++;
+        }else
+        {
+            vector[num] = this->nodo->item;
+            num++;
+            this->nodo->iz.PreordenAux(vector,num);
+            this->nodo->de.PreordenAux(vector,num);
+        }     
+        
+    }   
 }
 
 void TABBCom::PostordenAux(TVectorCom& vector, int& num){
-
+    if (!this->EsVacio())
+    {
+        if (this->nodo->iz.EsVacio() && this->nodo->de.EsVacio())
+        {
+            vector[num] = this->nodo->item;
+            num++;
+        }else
+        {
+            this->nodo->iz.PreordenAux(vector,num);
+            this->nodo->de.PreordenAux(vector,num);
+            vector[num] = this->nodo->item;
+            num++;
+        }     
+        
+    }
 }
 
 bool TABBCom::EsVacio() const{

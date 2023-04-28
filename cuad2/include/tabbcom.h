@@ -33,7 +33,7 @@ class TABBCom{
         TABBCom(TABBCom&);
         ~TABBCom();
         TABBCom& operator=(TABBCom&);
-        bool operator==(const TABBCom&);
+        bool operator==(TABBCom&);
         bool EsVacio() const;
         bool Insertar(const TComplejo&);
         bool Borrar(const TComplejo&);
