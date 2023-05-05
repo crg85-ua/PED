@@ -8,18 +8,8 @@
 
 using namespace std;
 
-class TNodoABB{
-    private:
-        TComplejo item;
-        TABBCom iz, de;
-    public:
-        TNodoABB();
-        TNodoABB(TNodoABB&);
-        ~TNodoABB();
-        TNodoABB& operator=(TNodoABB&);
-        friend class TABBCom;
 
-};
+class TNodoABB;
 
 class TABBCom{
     private:
@@ -47,9 +37,26 @@ class TABBCom{
         TVectorCom Postorden();
         TVectorCom Niveles();
         TABBCom& Copia(const TABBCom&);
-        TNodoABB* BuscarMaximo(TABBCom arbol);
+        TNodoABB* BuscarMaximo(const TABBCom&);
+        bool EliminarItem(const TComplejo&, TNodoABB*);
         friend ostream & operator<<(ostream&, TABBCom&);
 
         friend class TNodoABB;
+};
+
+
+class TNodoABB{
+    private:
+        TComplejo item;
+        TABBCom iz;
+        TABBCom de;
+    public:
+        TNodoABB();
+        TNodoABB(TNodoABB&);
+        ~TNodoABB();
+        TNodoABB& operator=(TNodoABB&);
+        
+        friend class TABBCom;
+
 };
 #endif

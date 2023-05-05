@@ -1,10 +1,8 @@
-#include "../include/tabbcom.h"
+#include "tabbcom.h"
 
 //TNodoABB
 TNodoABB::TNodoABB(){
-    this->item = TComplejo();
-    this->iz = TABBCom();
-    this->de = TABBCom();
+    
 }
 
 TNodoABB::TNodoABB(TNodoABB& nodo){
@@ -14,36 +12,39 @@ TNodoABB::TNodoABB(TNodoABB& nodo){
 }
 
 TNodoABB::~TNodoABB(){
-    this->item = TComplejo();
-    this->iz = TABBCom();
-    this->de = TABBCom();
+
 }
 
 TNodoABB& TNodoABB::operator=(TNodoABB& nodo){
     this->item = nodo.item;
     this->iz = nodo.iz;
     this->de = nodo.de;
+    return *this;
 }
 
 //TABBCom
-//Parte privada...
 //Parte pública
 
 TABBCom::TABBCom(){
-    this->nodo = new TNodoABB();
+    this->nodo = nullptr;
 }
 
 TABBCom::TABBCom(TABBCom& arbol){
-    this->nodo = arbol.nodo;
+    Copia(arbol);
 }
 
 TABBCom::~TABBCom(){
-    free(nodo);
+    //free(nodo);
     this->nodo = new TNodoABB();
 }
 
 TABBCom& TABBCom::operator=(TABBCom& arbol){
-    Copia(arbol);
+    if (this != &arbol) {
+		this->~TABBCom();
+		this->Copia(arbol);
+	}
+
+	return *this;
 }
 
 bool TABBCom::operator==(TABBCom& arbol){
@@ -84,7 +85,7 @@ void TABBCom::PreordenAux(TVectorCom& vector, int& num){
             this->nodo->de.PreordenAux(vector,num);
         }     
         
-    }   
+    } 
 }
 
 void TABBCom::PostordenAux(TVectorCom& vector, int& num){
@@ -106,7 +107,7 @@ void TABBCom::PostordenAux(TVectorCom& vector, int& num){
 }
 
 bool TABBCom::EsVacio() const{
-    if (this->nodo == new TNodoABB() || this->nodo)
+    if (nodo)
     {
         return false;
     }else{
@@ -119,9 +120,11 @@ bool TABBCom::Insertar(const TComplejo& nuevoNodo){
     bool insertar = false;
     //NO se podria insertar si ya existe
     //si el elemento es mayor que la raiz
-    if (this->EsVacio())
+    if (EsVacio())
     {
-        this->nodo->item = nuevoNodo;
+        TNodoABB *aux = new TNodoABB();
+		aux->item = nuevoNodo;
+		this->nodo = aux;
         insertar = true;
     }else{
         if (!this->Buscar(nuevoNodo))
@@ -129,12 +132,12 @@ bool TABBCom::Insertar(const TComplejo& nuevoNodo){
             if ((this->nodo->item.Mod() > nuevoNodo.Mod()) ||
             (this->nodo->item.Re() > nuevoNodo.Re()) || 
             (this->nodo->item.Re() == nuevoNodo.Re() && 
-            this->nodo->item.Im() > this->nodo->item.Im()))
-            {
-                insertar = this->nodo->de.Insertar(nuevoNodo);
-            }else
+            this->nodo->item.Im() > nuevoNodo.Im()))
             {
                 insertar = this->nodo->iz.Insertar(nuevoNodo);
+            }else
+            {
+                insertar = this->nodo->de.Insertar(nuevoNodo);
             }            
             
         }
@@ -154,38 +157,31 @@ TABBCom& TABBCom::Copia(const TABBCom& arbol){
     } else {
         this->nodo = NULL;
     }
-    
+    return *this;
 }
 
-bool TABBCom::Borrar(const TComplejo& nuevoNodo){
+bool TABBCom::Borrar(const TComplejo& borrar){
     bool borrado = false;
-    if (this->Buscar(nuevoNodo))
+    if (this->Buscar(borrar))
     {
         if (this->nodo->iz.EsVacio() && this->nodo->de.EsVacio())
         {
-            nodo = new TNodoABB();
+            nodo = nullptr;
             delete nodo;
             borrado = true;
         }else{
             if (!this->nodo->iz.EsVacio() && !this->nodo->de.EsVacio())
             {
-                TNodoABB *hijo = BuscarMaximo(this->nodo->iz);
-                TNodoABB *aux = nodo;
-
-                nodo = hijo;
-                aux->de.nodo = NULL;
-                delete aux;
-                aux = NULL;
-                borrado = true;
+                TNodoABB* sustituto = BuscarMaximo(this->nodo->iz);
+                borrado = EliminarItem(borrar,sustituto);
             } else{
 
                 TNodoABB *hijo = (nodo->iz.EsVacio()) ? nodo->de.nodo : nodo->iz.nodo;
                 TNodoABB *aux = nodo;
                 
-                nodo = hijo;
-                aux->de.nodo = NULL;
+                nodo->item = hijo->item;
                 delete aux;
-                aux = NULL;                             
+                aux = nullptr;                         
 
                 borrado = true;                
             }
@@ -196,7 +192,7 @@ bool TABBCom::Borrar(const TComplejo& nuevoNodo){
     return borrado;
 }
 
-TNodoABB* TABBCom::BuscarMaximo(const TABBCom arbol){
+TNodoABB* TABBCom::BuscarMaximo(const TABBCom& arbol){
     if (arbol.EsVacio())
     {
         return new TNodoABB();
@@ -204,7 +200,7 @@ TNodoABB* TABBCom::BuscarMaximo(const TABBCom arbol){
 
     if (arbol.nodo->de.EsVacio())
     {
-        return arbol.nodo->de.nodo;
+        return arbol.nodo;
     }
 
     return BuscarMaximo(arbol.nodo->de);  
@@ -212,23 +208,60 @@ TNodoABB* TABBCom::BuscarMaximo(const TABBCom arbol){
 }
 
 bool TABBCom::Buscar(const TComplejo& buscado){
-    bool igual;
+    bool igual = false;
 
-    if (this->nodo->item == buscado)
+    if (!EsVacio())
     {
-        igual = true;
-    } else{
-        if (this->nodo->iz.Buscar(buscado) ||
-            this->nodo->de.Buscar(buscado))
+        if (this->nodo->item == buscado)
         {
             igual = true;
-        }else{
-            igual = false;
+        } else{
+            if (this->nodo->iz.Buscar(buscado) ||
+                this->nodo->de.Buscar(buscado))
+            {
+                igual = true;
+            }else{
+                igual = false;
+            }
+            
         }
-        
     }
     
+    
     return igual;
+    
+}
+
+bool TABBCom::EliminarItem(const TComplejo& borrado, TNodoABB* sustituto){
+    bool correcto = false;
+    if (!EsVacio())
+    {   
+        if (this->nodo->item == borrado)
+        {
+            TNodoABB *aux = this->nodo;            
+            this->nodo = sustituto;
+            sustituto = nullptr;
+            aux = nullptr;
+        }
+
+        if ((this->nodo->item.Mod() > borrado.Mod()) ||
+        (this->nodo->item.Re() > borrado.Re()) || 
+        (this->nodo->item.Re() == borrado.Re() && 
+        this->nodo->item.Im() > borrado.Im()))
+        {
+            this->nodo->iz.EliminarItem(borrado,sustituto);
+            correcto = true;
+        }else
+        {
+            this->nodo->de.EliminarItem(borrado,sustituto);
+            correcto = true;
+        }      
+           
+                 
+    }
+    
+    
+    return correcto;
     
 }
 
@@ -321,9 +354,11 @@ TVectorCom TABBCom::Niveles(){
         }
         if (!(*aux).de.EsVacio())
         {
-             cola.push((*aux).de.nodo);
+            cola.push((*aux).de.nodo);
         }
     }
+
+    return v;
 }
 
 ostream& operator<<(ostream& os, TABBCom& arbol){

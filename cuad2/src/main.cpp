@@ -1,19 +1,32 @@
 #include <iostream>
-#include "tlistacom.h"
+#include "tabbcom.h"
 
 using namespace std;
 
 
 int main(void)
 {
-  TComplejo a, b(1), c(2, 3);
-  TListaCom l1;
-  
-  l1.InsCabeza(a);
-  l1.InsertarI(b, l1.Ultima());
-  l1.InsertarD(c, l1.Primera());
+  TABBCom a;
 
-  cout<<"l1 = "<<l1<<endl;
-   
-  return 0;
+  TComplejo c1(1), c2(2, 3);
+
+  a.Insertar(c1);
+
+  TABBCom b(a), c;
+  c=b;
+
+  a.Insertar(c2);
+  if( a.Inorden() == b.Inorden() )
+        cout << "MAL! SE HAN COPIADO PUNTEROS" << endl;
+  else
+	cout << "CORRECTO CONSTRUCTOR DE COPIA" << endl;
+
+
+  b.Insertar(c2);
+  if( b.Inorden() == c.Inorden() )
+        cout << "MAL! SE HAN COPIADO PUNTEROS" << endl;
+  else
+	cout << "CORRECTA ASIGNACION" << endl;
+
+  return 1;
 }

@@ -7,40 +7,15 @@ using namespace std;
 int
 main(void)
 {
-  TVectorCom a, b(3), c(5);
-  c[1] = 1;
-  c[2] = 2;
-  c[3] = 3;
-  c[4] = 4;
-  c[5] = 5;
-  c[6] = 6;
-  if(c.Redimensionar(0))
-	cout << "Redimensionado: " << c << endl;
-  else
-	cout << "No Redimensionado: " << c << endl;
+  TVectorCom a(2);
+  TVectorCom b(a);
+  TVectorCom c(b);
 
-  if(c.Redimensionar(5))
-	cout << "Redimensionado: " << c << endl;
-  else
-	cout << "No Redimensionado: " << c << endl;
-
-  if(c.Redimensionar(6))
-	cout << "Redimensionado: " << c << endl;
-  else
-	cout << "No Redimensionado: " << c << endl;
-
-  if(c.Redimensionar(3))
-	cout << "Redimensionado: " << c << endl;
-  else
-	cout << "No Redimensionado: " << c << endl;
-
-  if(a.Redimensionar(3))
-	cout << "Redimensionado: " << a << endl;
-  else
-	cout << "No Redimensionado: " << a << endl;
+  cout << "a: " << a << endl;
+  cout << "b: " << b << endl;
+  cout << "c: " << c << endl;
 
   return 0;
-
 }
 
 

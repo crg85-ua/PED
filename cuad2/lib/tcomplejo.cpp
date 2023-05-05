@@ -32,8 +32,10 @@ TComplejo::TComplejo( const TComplejo& numComplejo){
 
 TComplejo& TComplejo::operator=( const TComplejo& numComplejo){
 
-    this->re = numComplejo.re;
-    this->im = numComplejo.im;
+    this->~TComplejo();
+    
+    re = numComplejo.re;
+    im = numComplejo.im;
     return *this;
 }
 
