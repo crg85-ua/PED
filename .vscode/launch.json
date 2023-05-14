@@ -8,7 +8,7 @@
             "name": "Debug C++",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/tad",
+            "program": "${workspaceFolder}/cuad2/TABBCom",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
