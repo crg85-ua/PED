@@ -21,7 +21,7 @@ class TNodoAVL
         TNodoAVL();
         TNodoAVL(TNodoAVL&);
         ~TNodoAVL();
-        TNodoAVL& operator=(TNodoAVL&);
+        TNodoAVL& operator=(const TNodoAVL&);
         
         friend class TNodoAVL;
 };
@@ -35,9 +35,9 @@ class TAVLCom
         void PostordenAux(TVectorCom&, int&);
     public:
         TAVLCom();
-        TAVLCom(TAVLCom&);
+        TAVLCom(const TAVLCom&);
         ~TAVLCom();
-        TAVLCom& operator=(TAVLCom&);
+        TAVLCom& operator=( const TAVLCom&) const;
 
         bool operator==(TAVLCom&);
         bool operator!=(TAVLCom&);
