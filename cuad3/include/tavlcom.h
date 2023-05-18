@@ -22,13 +22,13 @@ class TAVLCom
         TAVLCom();
         TAVLCom(const TAVLCom&);
         ~TAVLCom();
-        TAVLCom& operator=(TAVLCom&);
+        TAVLCom& operator=(const TAVLCom&);
 
         bool operator==(TAVLCom&);
         bool operator!=(TAVLCom&);
         bool EsVacio();
         bool Insertar(TComplejo&);
-        bool Buscar(TComplejo&);
+        bool Buscar(const TComplejo&);
         bool Borrar(TComplejo&);
         int Altura();
         TComplejo Raiz();
@@ -37,6 +37,8 @@ class TAVLCom
         TVectorCom Inorden();
         TVectorCom Preorden();
         TVectorCom Postorden();
+        TComplejo mayorIzquierda(TNodoAVL*);
+        void sustituir(TNodoAVL*&, const TComplejo&);
 
         friend ostream& operator<<(ostream&, TAVLCom&);
 

@@ -2,9 +2,6 @@
 
 TNodoAVL::TNodoAVL()
 {
-    this->item = TComplejo();
-    this->iz = TAVLCom();
-    this->de = TAVLCom();
     this->fe = 0;
 }
 
@@ -15,9 +12,6 @@ TNodoAVL::TNodoAVL(TNodoAVL &nodo)
 
 TNodoAVL::~TNodoAVL()
 {
-    this->item = TComplejo();
-    this->iz = TAVLCom();
-    this->de = TAVLCom();
     this->fe = 0;
 }
 
@@ -34,9 +28,69 @@ TNodoAVL &TNodoAVL::operator=(TNodoAVL &nodo)
     return *this;
 }
 
+/// TAVLCom
+/// PRIVATE
+void TAVLCom::InordenAux(TVectorCom &vector, int &num)
+{
+    if (!this->EsVacio())
+    {
+        if (this->raiz->iz.EsVacio() && this->raiz->de.EsVacio())
+        {
+            vector[num] = this->raiz->item;
+            num++;
+        }
+        else
+        {
+            this->raiz->iz.PreordenAux(vector, num);
+            this->raiz->de.PreordenAux(vector, num);
+            vector[num] = this->raiz->item;
+            num++;
+        }
+    }
+}
+
+void TAVLCom::PreordenAux(TVectorCom &vector, int &num)
+{
+    if (!this->EsVacio())
+    {
+        if (this->raiz->iz.EsVacio() && this->raiz->de.EsVacio())
+        {
+            vector[num] = this->raiz->item;
+            num++;
+        }
+        else
+        {
+            vector[num] = this->raiz->item;
+            num++;
+            this->raiz->iz.PreordenAux(vector, num);
+            this->raiz->de.PreordenAux(vector, num);
+        }
+    }
+}
+
+void TAVLCom::PostordenAux(TVectorCom &vector, int &num)
+{
+    if (!this->EsVacio())
+    {
+        if (this->raiz->iz.EsVacio() && this->raiz->de.EsVacio())
+        {
+            vector[num] = this->raiz->item;
+            num++;
+        }
+        else
+        {
+            this->raiz->iz.PreordenAux(vector, num);
+            this->raiz->de.PreordenAux(vector, num);
+            vector[num] = this->raiz->item;
+            num++;
+        }
+    }
+}
+
+/// PUBLIC
 TAVLCom::TAVLCom()
 {
-    this->raiz = new TNodoAVL();
+    this->raiz = NULL;
 }
 
 TAVLCom::TAVLCom(const TAVLCom &arbol)
@@ -46,15 +100,16 @@ TAVLCom::TAVLCom(const TAVLCom &arbol)
 
 TAVLCom::~TAVLCom()
 {
-    this->raiz = new TNodoAVL();
+    //this->raiz = new TNodoAVL();
 }
 
-TAVLCom &TAVLCom::operator=(TAVLCom &arbol)
+TAVLCom &TAVLCom::operator=(const TAVLCom &arbol)
 {
     if (this->raiz != arbol.raiz)
     {
         this->raiz = arbol.raiz;
     }
+    return *this;
 }
 
 bool TAVLCom::operator==(TAVLCom &arbol)
@@ -81,7 +136,7 @@ bool TAVLCom::Insertar(TComplejo &nodo)
 {
 }
 
-bool TAVLCom::Buscar(TComplejo &nodo)
+bool TAVLCom::Buscar(const TComplejo &nodo)
 {
 
     if (!EsVacio())
@@ -89,22 +144,54 @@ bool TAVLCom::Buscar(TComplejo &nodo)
         if (this->raiz->item == nodo)
         {
             return true;
-        } else{
+        }
+        else
+        {
             if (this->raiz->iz.Buscar(nodo) ||
                 this->raiz->de.Buscar(nodo))
             {
-               return true;
+                return true;
             }
-            
         }
     }
-    
-    
+
     return false;
 }
 
 bool TAVLCom::Borrar(TComplejo &nodo)
 {
+    bool removed;
+    if (this->Buscar(nodo))
+    {
+        if (this->raiz->item == nodo) {
+            if (this->raiz->de.EsVacio() && this->raiz->iz.EsVacio()) {
+                delete this->raiz;
+                this->raiz = NULL;
+
+                return true;
+            } else if (this->raiz->iz.EsVacio() || this->raiz->de.EsVacio()) {
+                TNodoAVL* temp = this->raiz;
+
+                if (this->raiz->iz.EsVacio()) {
+                    this->raiz = this->raiz->de.raiz;
+                } else {
+                    this->raiz = this->raiz->iz.raiz;
+                }
+
+                delete temp;
+                temp->iz.raiz = NULL;
+                temp->de.raiz = NULL;
+
+                temp = NULL;
+                removed = true;
+            } else {
+                this->Sustituir();
+
+                removed = true;
+            }
+        }
+    }
+    
 }
 
 int TAVLCom::Altura()
@@ -164,14 +251,60 @@ int TAVLCom::NodosHoja()
 
 TVectorCom TAVLCom::Inorden()
 {
+    int pos = 1;
+
+    TVectorCom v(Nodos());
+    InordenAux(v, pos);
+    return v;
 }
 
 TVectorCom TAVLCom::Preorden()
 {
+    int pos = 1;
+
+    TVectorCom v(Nodos());
+    PreordenAux(v, pos);
+    return v;
 }
 
 TVectorCom TAVLCom::Postorden()
 {
+    int pos = 1;
+
+    TVectorCom v(Nodos());
+    PostordenAux(v, pos);
+    return v;
+}
+
+TComplejo TAVLCom::mayorIzquierda(TNodoAVL* nodo) {
+    if (nodo == NULL)
+        return TComplejo();
+
+    while (nodo->de.raiz != NULL)
+        nodo = nodo->de.raiz;
+
+    return nodo->item;
+}
+
+void TAVLCom::sustituir(TNodoAVL* &nodo, const TComplejo &valor) {
+    if (nodo == NULL)
+        return;
+
+    if (valor.Mod() > nodo->item.Mod())
+        sustituir(nodo->de.raiz, valor);
+    else if (valor.Mod() < nodo->item.Mod())
+        sustituir(nodo->iz.raiz, valor);
+    else {
+        if (nodo->iz.raiz != NULL && nodo->de.raiz != NULL) {
+            TComplejo mayor = mayorIzquierda(nodo->iz.raiz);
+            nodo->item = mayor;
+            sustituir(nodo->iz.raiz, mayor);
+        } else {
+            TNodoAVL* eliminar = nodo;
+            nodo = (nodo->iz.raiz != NULL) ? nodo->iz.raiz : nodo->de.raiz;
+            delete eliminar;
+        }
+    }
 }
 
 ostream &operator<<(ostream &os, TAVLCom &arbol)
