@@ -83,6 +83,24 @@ bool TAVLCom::Insertar(TComplejo &nodo)
 
 bool TAVLCom::Buscar(TComplejo &nodo)
 {
+
+    if (!EsVacio())
+    {
+        if (this->raiz->item == nodo)
+        {
+            return true;
+        } else{
+            if (this->raiz->iz.Buscar(nodo) ||
+                this->raiz->de.Buscar(nodo))
+            {
+               return true;
+            }
+            
+        }
+    }
+    
+    
+    return false;
 }
 
 bool TAVLCom::Borrar(TComplejo &nodo)
@@ -158,4 +176,5 @@ TVectorCom TAVLCom::Postorden()
 
 ostream &operator<<(ostream &os, TAVLCom &arbol)
 {
+    return os << arbol.Inorden();
 }
