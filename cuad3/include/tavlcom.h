@@ -9,22 +9,7 @@
 
 using namespace std;
 
-class TAVLCom;
-
-class TNodoAVL
-{
-    private:
-        TComplejo item;
-        TAVLCom iz, de;
-        int fe;
-    public:
-        TNodoAVL();
-        TNodoAVL(TNodoAVL&);
-        ~TNodoAVL();
-        TNodoAVL& operator=(const TNodoAVL&);
-        
-        friend class TNodoAVL;
-};
+class TNodoAVL;
 
 class TAVLCom
 {
@@ -37,7 +22,7 @@ class TAVLCom
         TAVLCom();
         TAVLCom(const TAVLCom&);
         ~TAVLCom();
-        TAVLCom& operator=( const TAVLCom&) const;
+        TAVLCom& operator=(TAVLCom&);
 
         bool operator==(TAVLCom&);
         bool operator!=(TAVLCom&);
@@ -58,6 +43,22 @@ class TAVLCom
         friend class TNodoAVL;
     
 
+};
+
+class TNodoAVL
+{
+    private:
+        TComplejo item;
+        TAVLCom iz;
+        TAVLCom de;
+        int fe;
+    public:
+        TNodoAVL();
+        TNodoAVL(TNodoAVL&);
+        ~TNodoAVL();
+        TNodoAVL& operator=(TNodoAVL&);
+        
+        friend class TAVLCom;
 };
 
 #endif
