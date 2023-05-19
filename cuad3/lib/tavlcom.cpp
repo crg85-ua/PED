@@ -207,6 +207,7 @@ bool TAVLCom::Buscar(const TComplejo &nodo)
 
 bool TAVLCom::Borrar(TComplejo &nodo)
 {
+    bool eliminado = false;
     if (this->Buscar(nodo))
     {
         if (this->raiz->item == nodo) {
@@ -237,10 +238,16 @@ bool TAVLCom::Borrar(TComplejo &nodo)
                 sustituir(nodo);
                 return true;
             }
+        }else {
+            if (mayorQue(raiz->item, nodo)) {
+                eliminado = this->raiz->iz.Borrar(nodo);
+            } else {
+                eliminado = this->raiz->de.Borrar(nodo);
+            }
         }
     }
     
-    return false;
+    return eliminado;
 }
 
 int TAVLCom::Altura()
