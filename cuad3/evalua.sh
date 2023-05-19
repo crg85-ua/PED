@@ -3,13 +3,13 @@
 #
 
 #Si tus ficheros de prueba no comienzan por "tad", cambia "tad*.cpp" por el prefijo de tus ficheros, por ejemplo "prueba*.cpp":
-for FILE in *PRUEBA/TABBCom-*.cpp ; do 
+for FILE in *PRUEBA/tad*.cpp ; do 
 	echo "Evaluando $FILE"
 	
-	cp $FILE src/TABBCom.cpp 
-        rm -f ./TABBCom
+	cp $FILE src/tad.cpp 
+        rm -f ./tad
 	make
-	./TABBCom > $FILE.out
+	./tad > $FILE.out
 	diff -b -B -i $FILE.out $FILE.sal
 	if [ "$?" == "0" ]; then
 		echo "OK"

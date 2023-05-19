@@ -95,7 +95,10 @@ TAVLCom::TAVLCom()
 
 TAVLCom::TAVLCom(const TAVLCom &arbol)
 {
-    this->raiz = arbol.raiz;
+    if (!arbol.EsVacio()) {
+        Copia(arbol);
+	} else
+		this->raiz = NULL;
 }
 
 TAVLCom::~TAVLCom()
@@ -122,7 +125,7 @@ bool TAVLCom::operator!=(TAVLCom &arbol)
     return (this->Inorden() != arbol.Inorden());
 }
 
-bool TAVLCom::EsVacio()
+bool TAVLCom::EsVacio() const
 {
     if (raiz)
     {
@@ -134,6 +137,50 @@ bool TAVLCom::EsVacio()
 
 bool TAVLCom::Insertar(TComplejo &nodo)
 {
+    bool result = false;
+    if (this->Buscar(nodo))
+    {
+        return false;
+    }
+    
+    if (this->EsVacio()) {
+        this->raiz = new TNodoAVL();
+        this->raiz->item = nodo;
+        result = true;
+    } else if (mayorQue(this->raiz->item,nodo)) {
+        result = this->raiz->iz.Insertar(nodo);
+    } else {
+        result = this->raiz->de.Insertar(nodo);
+    }
+
+    // Actualizar factor de equilibrio del nodo
+    this->raiz->fe = this->raiz->de.Altura() - this->raiz->iz.Altura();
+
+    if (this->raiz->fe < -1 || this->raiz->fe > 1) {
+        if (this->raiz->fe < -1) {
+            if (mayorQue(nodo,this->raiz->iz.raiz->item)) {
+                // Rotación doble izquierda-derecha
+                RotacionIzquierda(this->raiz->iz.raiz);
+            }
+            // Rotación simple derecha
+            RotacionDerecha(this->raiz);
+        } else if (this->raiz->fe > 1) {
+            if (mayorQue(this->raiz->de.raiz->item,nodo)) {
+                // Rotación doble derecha-izquierda
+                RotacionDerecha(this->raiz->de.raiz);
+            }
+            // Rotación simple izquierda
+            RotacionIzquierda(this->raiz);
+        }
+    }
+    return result;
+}
+
+bool TAVLCom::mayorQue(const TComplejo& existe, const TComplejo& nuevo){
+    return (existe.Mod() > nuevo.Mod()) ||
+            (existe.Re() > nuevo.Re()) || 
+            (existe.Re() == nuevo.Re() && 
+            existe.Im() > nuevo.Im());
 }
 
 bool TAVLCom::Buscar(const TComplejo &nodo)
@@ -160,15 +207,16 @@ bool TAVLCom::Buscar(const TComplejo &nodo)
 
 bool TAVLCom::Borrar(TComplejo &nodo)
 {
-    bool removed;
     if (this->Buscar(nodo))
     {
         if (this->raiz->item == nodo) {
+            //Si es una hoja 
             if (this->raiz->de.EsVacio() && this->raiz->iz.EsVacio()) {
                 delete this->raiz;
                 this->raiz = NULL;
 
                 return true;
+            //Si solo tiene un hijo
             } else if (this->raiz->iz.EsVacio() || this->raiz->de.EsVacio()) {
                 TNodoAVL* temp = this->raiz;
 
@@ -183,15 +231,16 @@ bool TAVLCom::Borrar(TComplejo &nodo)
                 temp->de.raiz = NULL;
 
                 temp = NULL;
-                removed = true;
+                return true;
+            //Si tiene 2 hijos, por tanto es el nodo de un arbol
             } else {
-                this->Sustituir();
-
-                removed = true;
+                sustituir(nodo);
+                return true;
             }
         }
     }
     
+    return false;
 }
 
 int TAVLCom::Altura()
@@ -276,7 +325,7 @@ TVectorCom TAVLCom::Postorden()
     return v;
 }
 
-TComplejo TAVLCom::mayorIzquierda(TNodoAVL* nodo) {
+TComplejo TAVLCom::mayorIzquierda(TNodoAVL* &nodo) {
     if (nodo == NULL)
         return TComplejo();
 
@@ -286,25 +335,60 @@ TComplejo TAVLCom::mayorIzquierda(TNodoAVL* nodo) {
     return nodo->item;
 }
 
-void TAVLCom::sustituir(TNodoAVL* &nodo, const TComplejo &valor) {
-    if (nodo == NULL)
+void TAVLCom::sustituir(const TComplejo &valor) {
+    if (this == NULL)
         return;
 
-    if (valor.Mod() > nodo->item.Mod())
-        sustituir(nodo->de.raiz, valor);
-    else if (valor.Mod() < nodo->item.Mod())
-        sustituir(nodo->iz.raiz, valor);
+    if (mayorQue(valor,this->raiz->item))
+        this->raiz->iz.sustituir(valor);
+    else if (mayorQue(this->raiz->item,valor))
+        this->raiz->de.sustituir(valor);
     else {
-        if (nodo->iz.raiz != NULL && nodo->de.raiz != NULL) {
-            TComplejo mayor = mayorIzquierda(nodo->iz.raiz);
-            nodo->item = mayor;
-            sustituir(nodo->iz.raiz, mayor);
+        if (this->raiz->iz.raiz != NULL && this->raiz->de.raiz != NULL) {
+            TComplejo mayor = mayorIzquierda(this->raiz->iz.raiz);
+            this->raiz->item = mayor;
+            this->raiz->iz.sustituir(mayor);
         } else {
-            TNodoAVL* eliminar = nodo;
-            nodo = (nodo->iz.raiz != NULL) ? nodo->iz.raiz : nodo->de.raiz;
+            TNodoAVL* eliminar = this->raiz;
+            this->raiz = (this->raiz->iz.raiz != NULL) ? this->raiz->iz.raiz : this->raiz->de.raiz;
             delete eliminar;
         }
     }
+}
+
+void TAVLCom::RotacionDerecha( TNodoAVL* &nodo) {
+    TNodoAVL* aux = nodo->iz.raiz;
+    nodo->iz.raiz = aux->de.raiz;
+    aux->de.raiz = nodo;
+    nodo = aux;
+
+    // Actualizar factores de equilibrio
+    nodo->de.raiz->fe = nodo->de.Altura() - nodo->iz.Altura();
+    nodo->fe = nodo->de.Altura() - nodo->iz.Altura();
+}
+
+void TAVLCom::RotacionIzquierda(TNodoAVL* &nodo) {
+    TNodoAVL* aux = nodo->de.raiz;
+    nodo->de.raiz = aux->iz.raiz;
+    aux->iz.raiz = nodo;
+    nodo = aux;
+
+    // Actualizar factores de equilibrio
+    nodo->iz.raiz->fe = nodo->de.Altura() - nodo->iz.Altura();
+    nodo->fe = nodo->de.Altura() - nodo->iz.Altura();
+}
+
+TAVLCom& TAVLCom::Copia(const TAVLCom& arbol){
+    if (!arbol.EsVacio())
+    {
+        this->raiz = new TNodoAVL();
+		this->raiz->item = arbol.raiz->item;
+		this->raiz->iz.Copia(arbol.raiz->iz);
+		this->raiz->de.Copia(arbol.raiz->de);
+    } else {
+        this->raiz = NULL;
+    }
+    return *this;
 }
 
 ostream &operator<<(ostream &os, TAVLCom &arbol)

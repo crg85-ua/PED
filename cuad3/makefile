@@ -8,8 +8,8 @@ INCLUDEDIR=include
 _OBJ= tcomplejo.o tvectorcom.o tavlcom.o
 OBJ = $(patsubst %,$(LIBDIR)/%,$(_OBJ))
 
-TAVLCom:    src/main.cpp $(OBJ)
-	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/main.cpp $(OBJ) -o main
+tad:    src/tad.cpp $(OBJ)
+	$(CC) $(OPTIONS) $(DEBUG) -I$(INCLUDEDIR) src/tad.cpp $(OBJ) -o tad
 
 $(LIBDIR)/%.o : $(LIBDIR)/%.cpp $(INCLUDEDIR)/%.h
 	$(CC) $(OPTIONS) $(DEBUG) -c -I$(INCLUDEDIR) -o $@ $<
