@@ -13,7 +13,7 @@ public:
     //Constructor por defecto
     TCalendario();
     //Constructor con parámetros
-    TCalendario(int, int, int, char *);
+    TCalendario(int dia, int mes, int anyo, char * mensaje);
     //Constructor copia
     TCalendario(const TCalendario &);
     //Destructor
@@ -58,16 +58,8 @@ public:
     //Devuelve el mensaje
     char* Mensaje();
 
-    friend ostream & operator<<(ostream &, const TCalendario &);
+    friend ostream& operator<<(ostream&, const TCalendario&);
 
 };
 
 #endif
-
-// tcalendario::tcalendario(/* args */)
-// {
-// }
-
-// tcalendario::~tcalendario()
-// {
-// }
