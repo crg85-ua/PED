@@ -1,6 +1,7 @@
 #ifndef _TCALENDARIO
 #define _TCALENDARIO
 #include <ostream>
+#include <set>
 
 using namespace std;
 
@@ -9,7 +10,11 @@ class TCalendario
 private:
     int dia, mes, anyo;
     char* mensaje;
+    bool fechaCorrecta(int dia, int mes, int anyo);
+    bool esBisiesto(int anyo);
 public:
+    friend ostream& operator<<(ostream&, const TCalendario&);
+
     //Constructor por defecto
     TCalendario();
     //Constructor con parámetros
@@ -19,7 +24,7 @@ public:
     //Destructor
     ~TCalendario();
     //Sobrecarga del operador =
-    TCalendario operator=(const TCalendario&);
+    TCalendario& operator=(const TCalendario&);
 
     //METODOS
     //Sobrecarga del operador +
@@ -58,7 +63,6 @@ public:
     //Devuelve el mensaje
     char* Mensaje();
 
-    friend ostream& operator<<(ostream&, const TCalendario&);
 
 };
 
