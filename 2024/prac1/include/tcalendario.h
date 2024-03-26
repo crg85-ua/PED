@@ -28,10 +28,10 @@ public:
 
     //METODOS
     //Sobrecarga del operador +
-    TCalendario operator+(const TCalendario&);
+    TCalendario operator+(const int);
 
     //Sobrecarga del operador -
-    TCalendario operator-(const TCalendario&);
+    TCalendario operator-(const int);
 
     //Sobrecarga del operador ++ (postincremento)
     TCalendario operator++(int);
@@ -59,6 +59,18 @@ public:
 
     //Sobrecarga del operador >
     bool operator>(const TCalendario&);
+
+    //TCalendario vacío
+    bool EsVacio();
+
+    //Devuelve el día
+    int Dia();
+
+    //Devuelve el mes
+    int Mes();
+
+    //Devuelve el año
+    int Anyo();
 
     //Devuelve el mensaje
     char* Mensaje();
