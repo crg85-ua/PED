@@ -1,6 +1,7 @@
 #ifndef _TVECTORC
 #define __TVECTORC
 #include "tcalendario.h"
+#include <iostream>
 
 using namespace std;
 
@@ -57,7 +58,7 @@ public:
 
     //Funcion amiga
     //Sobrecarga del operador salida
-    friend ostream& operator<<(ostream&, const TCalendario&);
+    friend ostream& operator<<(ostream&, const TVectorCalendario&);
 };
 
 #endif
