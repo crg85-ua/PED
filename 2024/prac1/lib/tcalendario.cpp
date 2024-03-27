@@ -80,7 +80,7 @@
             this->mes = cal.mes;
             this->anyo = cal.anyo;
             if (cal.mensaje != NULL){
-                delete [] this->mensaje;
+                //delete [] this->mensaje;
                 this->mensaje = strdup(cal.mensaje);
             }else{
                 this->mensaje = NULL;
@@ -131,7 +131,7 @@
         aux.dia = this->dia;
         aux.mes = this->mes;
         aux.anyo = this->anyo;
-        aux.ModMEnsaje(this->mensaje);
+        aux.ModMensaje(this->mensaje);
         for (int i = 1; i <= dias; i++)
         {
             aux++;
@@ -191,13 +191,26 @@
 
     // //Sobrecarga del operador -- (predecremento)
     TCalendario& TCalendario::operator--(){
+        if (this->dia == 1 && this->mes == 1 && this->anyo == 1900)
+        {
+            if (this->mensaje != NULL)
+            {
+                delete[] mensaje;
+                mensaje = NULL;
+            }
+
+            return *this;
+        }
+
+        //En caso de que no sea la primera fecha
         this->dia--;
-        if(this->dia == 0){
+        if(this->dia < 1){
+            this->dia = DIAS_EN_MES[this->mes == 1 ? 12 : this->mes-1];
             this->mes--;
-            if (this->mes == 0)
+            if (this->mes < 1)
             {
                 this->mes = 12;
-                this->anyo--;
+                this->anyo >= 1900 ? this->anyo = 1900 : this->anyo--;
             }
         }
 
@@ -205,7 +218,7 @@
     }
 
     // //Modifica el mensaje
-    bool TCalendario::ModMEnsaje(char* mensaje){
+    bool TCalendario::ModMensaje(char* mensaje){
         if (mensaje == NULL)
         {
             delete [] this->mensaje;
@@ -248,6 +261,19 @@
         
     }
 
+    //Modifica la fecha
+    bool TCalendario::ModFecha(int dia, int mes, int anyo){
+        if (fechaCorrecta(dia, mes, anyo))
+        {
+            this->dia = dia;
+            this->mes = mes;
+            this->anyo = anyo;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     // //TCalendario vacío
     bool TCalendario::EsVacio(){
         return (this->dia == 1 && this->mes == 1 && this->anyo == 1900 && this->mensaje == NULL);
@@ -273,7 +299,7 @@
         return this->mensaje;
     }
 
-    ostream & operator<<(ostream & os, const TCalendario & cal){
+    ostream& operator<<(ostream & os, const TCalendario & cal){
         os << (cal.dia < 10 ? "0" + to_string(cal.dia) : to_string(cal.dia))  << "/" << (cal.mes < 10 ? "0" + to_string(cal.mes) : to_string(cal.mes)) << "/" << cal.anyo << " \"" << (cal.mensaje != NULL ? cal.mensaje : "") << "\"";
         return os;
     }

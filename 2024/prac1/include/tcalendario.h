@@ -46,7 +46,10 @@ public:
     TCalendario& operator--();
 
     //Modifica el mensaje
-    bool ModMEnsaje(char *);
+    bool ModMensaje(char *);
+
+    //Modifica la fecha
+    bool ModFecha(int, int, int);
 
     //Sobrecarga del operador ==
     bool operator==(const TCalendario&);
