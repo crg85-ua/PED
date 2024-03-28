@@ -130,21 +130,50 @@ TListaCalendario TListaCalendario::SumarSubl(int I_L1, int F_L1, TListaCalendari
 }
 
 TListaCalendario TListaCalendario::ExtraerRango(int n1, int n2) {
-    // Aquí debes implementar la lógica para extraer un rango de nodos de la lista
+    TListaCalendario ordenadas;
+    TCalendario cal;
+    TNodoCalendario *nodo = this->primero;
+    int contador = 1;
+
+    while (nodo)
+    {
+        if (contador >= n1 && contador <= n2)
+        {
+            ordenadas.Insertar(nodo->c);
+            cal = nodo->c;
+            nodo = nodo->siguiente;
+            Borrar(cal);
+            contador++;
+        }else{
+            contador++;
+            nodo = nodo->siguiente;
+        }
+        
+    }
+    
+    
+    
 }
 
 // //Sobrecarga del operador salida
 ostream& operator<<(ostream& os, const TListaCalendario& lista){
-    // os << "[";
-    // for (unsigned i = 0; i < vector.tamano; i++)
-    // {
-    //     os << "(" << i + 1 << ") " << vector.c[i];
-    //     if (i < vector.tamano - 1)
-    //     {
-    //         os << ", ";
-    //     }
-    // }
+    TNodoCalendario *nodo;
 
-    // os << "]";
-    // return os;        
+    os << "<";
+    nodo = lista.primero;
+    while (nodo != NULL)
+    {
+        os << nodo->c;
+        nodo = nodo->siguiente;
+
+        if (nodo)
+        {
+            os << " ";
+        }        
+    }
+
+    os << ">";
+
+    return os;
+    
 }
