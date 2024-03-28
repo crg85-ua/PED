@@ -3,56 +3,8 @@
 #include "tcalendario.h"
 
 using namespace std;
-
-class TNodoCalendario
-{
-private:
-    TCalendario c;
-    TNodoCalendario *siguiente;
-public:
-    //Constructor por defecto
-    TNodoCalendario();
-
-    //Constructor de copia
-    TNodoCalendario(const TNodoCalendario&);
-
-    //Destructor
-    ~TNodoCalendario();
-
-    //Sobrecarga del operador =
-    TNodoCalendario& operator=(const TNodoCalendario&);
-};
-
-class TListaPos
-{
-private:
-    TNodoCalendario *pos;
-public:
-    //Constructor por defecto
-    TListaPos();
-
-    //Constructor de copia
-    TListaPos(const TListaPos&);
-
-    //Destructor
-    ~TListaPos();
-
-    //Sobrecarga del operador =
-    TListaPos& operator=(const TListaPos&);
-
-    //METODOS
-    //Sobrecarga del operador ==
-    bool operator==(const TListaPos&);
-
-    //Sobrecarga del operador !=
-    bool operator!=(const TListaPos&);
-
-    //Devuelve la posicion siguiente
-    TListaPos Siguiente();
-
-    //Posicion vacia
-    bool EsVacia();
-};
+class TListaPos;
+class TNodoCalendario;
 
 class TListaCalendario
 {
@@ -122,5 +74,60 @@ public:
     //Sobrecarga del operador salida
     friend ostream& operator<<(ostream&, TListaCalendario&);
 
+};
+
+class TNodoCalendario
+{
+    friend class TListaCalendario;
+    friend class TListaPos;
+private:
+    TCalendario c; 
+    TNodoCalendario *siguiente;
+
+public:
+    //Constructor por defecto
+    TNodoCalendario();
+
+    //Constructor de copia
+    TNodoCalendario(const TNodoCalendario&);
+
+    //Destructor
+    ~TNodoCalendario();
+
+    //Sobrecarga del operador =
+    TNodoCalendario& operator=(const TNodoCalendario&);
+};
+
+class TListaPos
+{
+    friend class TListaCalendario;
+    friend class TNodoCalendario;
+private:
+    TNodoCalendario *pos;
+public:
+    //Constructor por defecto
+    TListaPos();
+
+    //Constructor de copia
+    TListaPos(const TListaPos&);
+
+    //Destructor
+    ~TListaPos();
+
+    //Sobrecarga del operador =
+    TListaPos& operator=(const TListaPos&);
+
+    //METODOS
+    //Sobrecarga del operador ==
+    bool operator==(const TListaPos&);
+
+    //Sobrecarga del operador !=
+    bool operator!=(const TListaPos&);
+
+    //Devuelve la posicion siguiente
+    TListaPos Siguiente();
+
+    //Posicion vacia
+    bool EsVacia();
 };
 #endif

@@ -3,64 +3,84 @@
 // Implementación de los métodos de TNodoCalendario
 
 TNodoCalendario::TNodoCalendario(){
-    
+    this->siguiente = NULL;
 }
 
 TNodoCalendario::TNodoCalendario(const TNodoCalendario &nodo) {
-   
+   this->siguiente = nodo.siguiente;
+   this->c = nodo.c;
+
 }
 
 TNodoCalendario::~TNodoCalendario() {
-   
+   this->siguiente = NULL;
 }
 
 TNodoCalendario &TNodoCalendario::operator=(const TNodoCalendario &nodo) {
-    if (this != &nodo) {
-        c = nodo.c;
-        siguiente = NULL;
-    }
+   
+    this->c = nodo.c;
+    this->siguiente = nodo.siguiente;    
     return *this;
 }
 
 // Implementación de los métodos de TListaPos
 
-TListaPos::TListaPos() : pos(NULL) {}
+TListaPos::TListaPos(){
+    this->pos = NULL;
+}
 
-TListaPos::TListaPos(const TListaPos& listaPos) {}
+TListaPos::TListaPos(const TListaPos& listaPos) {
+    this->pos = listaPos.pos;
+}
 
-TListaPos::~TListaPos() {}
+TListaPos::~TListaPos() {
+    this->pos = NULL;
+}
 
 TListaPos &TListaPos::operator=(const TListaPos &listaPos) {
-    if (this != &listaPos) {
-        pos = listaPos.pos;
-    }
+    this->pos = listaPos.pos;    
     return *this;
 }
 
-bool TListaPos::operator==(const TListaPos &listaPos) {
-    return pos == listaPos.pos;
+bool TListaPos::operator==(const TListaPos &listaPos) {    
+    return this->pos == listaPos.pos;
 }
 
 bool TListaPos::operator!=(const TListaPos &listaPos) {
-    return pos != listaPos.pos;
+    return this->pos != listaPos.pos;
 }
 
 TListaPos TListaPos::Siguiente() {
-    if (pos != NULL) {
-        return TListaPos(pos->siguiente);
+    TListaPos aux;
+
+    if (pos==NULL)
+    {
+        aux.pos = NULL;
+    }else
+    {
+        aux.pos = this->pos->siguiente;
     }
-    return TListaPos();
+    
+    return aux;
+    
 }
 
 bool TListaPos::EsVacia() {
-    return pos == NULL;
+    return this->pos == NULL;
 }
 
 // Implementación de los métodos de TListaCalendario
 
-TListaCalendario::TListaCalendario() : primero(NULL) {}
+TListaCalendario::TListaCalendario(){
+    this->primero = NULL;
+}
 
-TListaCalendario::TListaCalendario(const TListaCalendario &listaCalendario) : primero(listaCalendario.primero) {}
+TListaCalendario::TListaCalendario(const TListaCalendario &lista) {
+    this->primero = lista.primero;
+    *this = lista;
+    
+
+}
 
 TListaCalendario::~TListaCalendario() {
     // Aquí debes implementar la lógica para liberar la memoria de los nodos de la lista
@@ -77,11 +97,11 @@ bool TListaCalendario::operator==(const TListaCalendario &listaCalendario) {
     return primero == listaCalendario.primero;
 }
 
-TListaCalendario TListaCalendario::operator+(const TListaCalendario &listaCalendario) {
+TListaCalendario& TListaCalendario::operator+(const TListaCalendario &listaCalendario) {
     // Aquí debes implementar la lógica para sumar dos listas de calendario
 }
 
-TListaCalendario TListaCalendario::operator-(const TListaCalendario &listaCalendario) {
+TListaCalendario& TListaCalendario::operator-(const TListaCalendario &listaCalendario) {
     // Aquí debes implementar la lógica para restar dos listas de calendario
 }
 
@@ -118,7 +138,6 @@ int TListaCalendario::Longitud() {
 }
 
 TListaPos TListaCalendario::Primera() {
-    return TListaPos(primero);
 }
 
 TListaPos TListaCalendario::Ultima() {
