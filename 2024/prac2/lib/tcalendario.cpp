@@ -1,7 +1,6 @@
 #include "tcalendario.h"
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
 
     const int DIAS_EN_MES[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // Días en cada mes (enero a diciembre)
 
@@ -299,6 +298,8 @@
     }
 
     // //Devuelve el año
+    #include <string> // Include the <string> header to access the to_string function
+
     int TCalendario::Anyo(){
         return this->anyo;
     }

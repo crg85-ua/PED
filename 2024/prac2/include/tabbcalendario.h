@@ -3,25 +3,27 @@
 
 #include "tcalendario.h"
 #include "tvectorcalendario.h"
+#include <queue>
 
 class TNodoABB;
 
 class TABBCalendario {
+    friend class TNodoABB;
 private:
     TNodoABB *raiz;
 
     // AUXILIAR: devuelve el recorrido en INORDEN
-    void InordenAux(TVectorCalendario &, int &);
+    void InordenAux(TVectorCalendario &, int &) const;
     // AUXILIAR: devuelve el recorrido en PREORDEN
-    void PreordenAux(TVectorCalendario &, int &);
+    void PreordenAux(TVectorCalendario &, int &) const;
     // AUXILIAR: devuelve el recorrido en POSTORDEN
-    void PostordenAux(TVectorCalendario &, int &);
+    void PostordenAux(TVectorCalendario &, int &) const;
 public:
     // Constructor
     TABBCalendario();
 
     // Constructor
-    TABBCalendario(TABBCalendario &);
+    TABBCalendario(const TABBCalendario &);
 
     // Destructor
     ~TABBCalendario();
@@ -43,6 +45,9 @@ public:
     TVectorCalendario Postorden() const;
     TVectorCalendario Niveles() const;
 
+    bool Maximo(TCalendario &) const;
+    bool Minimo(TCalendario &) const;
+
     friend ostream & operator<<(ostream &, const TABBCalendario &);
 
     TABBCalendario operator+(const TABBCalendario &);
@@ -51,6 +56,7 @@ public:
 };
 
 class TNodoABB {
+    friend class TABBCalendario;
 private:
     TCalendario item;
     TABBCalendario iz, de;
@@ -60,7 +66,7 @@ public:
     TNodoABB();
 
     // Constructor
-    TNodoABB(TNodoABB &);
+    TNodoABB(const TNodoABB &);
 
     // Destructor
     ~TNodoABB();
