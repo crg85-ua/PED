@@ -232,6 +232,15 @@
 
     // //Sobrecarga del operador ==
     bool TCalendario::operator==(const TCalendario& cal){
+        // if (this->mensaje == NULL && cal.mensaje == NULL)
+        // {
+        //     return (this->dia == cal.dia && this->mes == cal.mes && this->anyo == cal.anyo && true);
+
+        // }else if((this->mensaje == NULL && cal.mensaje != NULL) || (this->mensaje != NULL && cal.mensaje == NULL)){
+
+        //     return false;
+        // }
+        
         return (this->dia == cal.dia && this->mes == cal.mes && this->anyo == cal.anyo && strcmp(this->mensaje, cal.mensaje) == 0);
     }
 

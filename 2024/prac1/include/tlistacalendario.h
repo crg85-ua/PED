@@ -3,8 +3,32 @@
 #include "tcalendario.h"
 
 using namespace std;
+class TListaCalendario;
 class TListaPos;
-class TNodoCalendario;
+
+class TNodoCalendario
+{
+private:
+    TCalendario c; 
+    TNodoCalendario *siguiente;
+
+public:
+    //Constructor por defecto
+    TNodoCalendario();
+
+    //Constructor de copia
+    TNodoCalendario(const TNodoCalendario&);
+
+    //Destructor
+    ~TNodoCalendario();
+
+    //Sobrecarga del operador =
+    TNodoCalendario& operator=(const TNodoCalendario&);
+
+    friend ostream& operator<<(ostream&, const TListaCalendario&);
+    friend class TListaCalendario;
+    friend class TListaPos;
+};
 
 class TListaCalendario
 {
@@ -28,43 +52,43 @@ public:
     bool operator==(const TListaCalendario&);
 
     //Sobrecarga del operador +
-    TListaCalendario& operator+(const TListaCalendario&);
+    TListaCalendario operator+( const TListaCalendario&) const;
 
     //Sobrecarga del operador -
-    TListaCalendario& operator-(const TListaCalendario&);
+    TListaCalendario operator-( const TListaCalendario&) const;
 
     //Inserta el elemento en la posicion que corresponda en la lista
     bool Insertar(const TCalendario&);
 
     //Busca y borra el elemento
-    bool Borrar(const TCalendario&);
+    bool Borrar( TCalendario&);
     
     //Borra el elemento en la posicion indicada
-    bool Borrar(const TListaPos&);
+    bool Borrar( TListaPos&);
 
     //Borra todos los elementos con fecha anterior la indicada
     bool Borrar(int, int, int);
 
     //Devuelve true si lista vacia
-    bool EsVacia();
+    bool EsVacia() const;
 
     //Obtiene el elemento que ocupa la posicion
-    TCalendario Obtener(const TListaPos&);
+    TCalendario Obtener(const TListaPos&) const;
 
     //Devuelve true si el calendario está en la lista
-    bool Buscar(const TCalendario&);
+    bool Buscar(const TCalendario&) const;
 
     //Devuelve la longitud de la lista
-    int Longitud();
+    int Longitud() const;
 
     //Devuelve la primera posición en la lista
-    TListaPos Primera();
+    TListaPos Primera() const;
 
     // Devuelve la ultima posición en la lista
-    TListaPos Ultima();
+    TListaPos Ultima() const;
 
     // Suma de dos sublistas en una nueva lista
-    TListaCalendario SumarSubl( int I_L1, int F_L1, TListaCalendario& L2, int I_L2, int F_L2);
+    TListaCalendario SumarSubl(int I_L1, int F_L1, TListaCalendario& L2, int I_L2, int F_L2) const;
 
     //Extraer un rando de nodos de la lista
     TListaCalendario ExtraerRango(int n1, int n2);
@@ -72,36 +96,15 @@ public:
     //Funciones amigas
 
     //Sobrecarga del operador salida
-    friend ostream& operator<<(ostream&, TListaCalendario&);
-
-};
-
-class TNodoCalendario
-{
-    friend class TListaCalendario;
+    friend ostream& operator<<(ostream&, const TListaCalendario&);
+    friend class TNodoCalendario;
     friend class TListaPos;
-private:
-    TCalendario c; 
-    TNodoCalendario *siguiente;
 
-public:
-    //Constructor por defecto
-    TNodoCalendario();
-
-    //Constructor de copia
-    TNodoCalendario(const TNodoCalendario&);
-
-    //Destructor
-    ~TNodoCalendario();
-
-    //Sobrecarga del operador =
-    TNodoCalendario& operator=(const TNodoCalendario&);
 };
 
 class TListaPos
 {
-    friend class TListaCalendario;
-    friend class TNodoCalendario;
+
 private:
     TNodoCalendario *pos;
 public:
@@ -129,5 +132,8 @@ public:
 
     //Posicion vacia
     bool EsVacia();
+
+    friend class TListaCalendario;
+    friend class TNodoCalendario;
 };
 #endif
