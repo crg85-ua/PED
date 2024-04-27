@@ -4,13 +4,13 @@
 
 #Si tus ficheros de prueba no comienzan por "tad", cambia "tad*.cpp" por el prefijo de tus ficheros, por ejemplo "prueba*.cpp":
 #for FILE in *corrector/TCalendario/tad*.cpp ; do 
-for FILE in *corrector/pruebadf/TVectorCalendario_/tad*.cpp ; do 
+for FILE in *corrector/pruebadf/TCalendario/tad*.cpp ; do 
 	echo "Evaluando $FILE"
 	
 	cp $FILE src/tad.cpp 
-        rm -f ./tad
+        rm -f ./tad.exe
 	make
-	./tad > $FILE.out
+	./tad.exe > $FILE.out
 	diff -b -B -i $FILE.out $FILE.sal
 	if [ "$?" == "0" ]; then
 		echo "OK"
