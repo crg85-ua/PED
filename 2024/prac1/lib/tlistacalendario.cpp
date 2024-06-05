@@ -167,24 +167,31 @@ TListaCalendario TListaCalendario::operator-(const TListaCalendario &listaCalend
 }
 
 bool TListaCalendario::Insertar(const TCalendario &calendario) {
-   // Implement insertion logic
-    TNodoCalendario *newNode = new TNodoCalendario();
-    newNode->c = calendario;
-    
-    if (this->EsVacia() || calendario < this->primero->c)
+   // Create new node
+TNodoCalendario *newNode = new TNodoCalendario();
+newNode->c = calendario;
+
+// If list is empty or new node should be inserted at the beginning
+if (this->EsVacia() || calendario < this->primero->c)
+{
+    newNode->siguiente = this->primero;
+    this->primero = newNode;
+}
+else
+{
+    // Find the node before the insertion point
+    TNodoCalendario *current = this->primero;
+    while (current->siguiente != NULL && current->siguiente->c < calendario)
     {
-        newNode->siguiente = this->primero;
-        this->primero = newNode;
-        return true;
+        current = current->siguiente;
     }
-    
-    TNodoCalendario *aux = this->primero;
-    while (aux->siguiente != NULL && aux->siguiente->c < calendario) aux = aux->siguiente;
-    
-    newNode->siguiente = aux->siguiente;
-    aux->siguiente = newNode;
-    
-    return true;
+
+    // Insert new node
+    newNode->siguiente = current->siguiente;
+    current->siguiente = newNode;
+}
+
+return true;
 }
 
 bool TListaCalendario::Borrar( TCalendario &calendario) {
