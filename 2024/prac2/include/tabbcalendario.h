@@ -18,6 +18,8 @@ private:
     void PreordenAux(TVectorCalendario &, int &) const;
     // AUXILIAR: devuelve el recorrido en POSTORDEN
     void PostordenAux(TVectorCalendario &, int &) const;
+    TCalendario Maximo() const;
+    TCalendario Minimo() const;
 public:
     // Constructor
     TABBCalendario();
@@ -44,9 +46,6 @@ public:
     TVectorCalendario Preorden() const;
     TVectorCalendario Postorden() const;
     TVectorCalendario Niveles() const;
-
-    TCalendario Maximo() const;
-    TCalendario Minimo() const;
 
     friend ostream & operator<<(ostream &, const TABBCalendario &);
 
