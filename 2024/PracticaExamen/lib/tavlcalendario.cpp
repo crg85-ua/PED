@@ -243,7 +243,7 @@ bool TAVLCalendario::Borrar(TCalendario& cal) {
 
 
 // Devuelve true si el elemento está en el árbol, false en caso contrario
-bool TAVLCalendario::Buscar( TCalendario& cal)  {
+bool TAVLCalendario::Buscar( const TCalendario& cal)  {
     if(this->raiz != NULL){
         if(this->raiz->item == cal){
             return true;
@@ -367,14 +367,40 @@ TCalendario TAVLCalendario::Maximo() const {
 }
 
 int* TAVLCalendario::BuscaAVL(TListaCalendario& lista){
-    int* resultado = new int(lista.Longitud());
+    if(lista.EsVacia())return nullptr;
 
-    if(lista.EsVacia()){
-        return resultado = NULL;
+    int* resultado = new int[lista.Longitud()];
+
+    for (int i = 0; i < lista.Longitud(); i++)
+    {
+        resultado[i]=0;
     }
 
-    BuscaAVLAux(resultado, 0, "ra", lista);
-    
+    auto primera = lista.Primera().Siguiente();
+    for (int i = 0; i < lista.Longitud(); i++)
+    {
+        std::cout << "Buscando: " ;
+        std::cout << lista.Obtener(primera) << std::endl;
+        if(this->Buscar(lista.Obtener(primera))){
+            if(this->raiz->iz.Buscar(lista.Obtener(primera))){
+                std::cout << "iz"<< std::endl;
+                resultado[i]=1;
+            }
+            else if(this->raiz->de.Buscar(lista.Obtener(primera))){
+                std::cout << "der"<< std::endl;
+                resultado[i]=2;
+            }
+            else if (this->raiz->item == lista.Obtener(primera)){
+                std::cout << "raiz"<< std::endl;
+                resultado[i]=3;
+            }
+        }
+        else{
+            std::cout << "nada"<< std::endl;
+            resultado[i]=0;
+        }
+        primera = primera.Siguiente();
+    }
     return resultado;
 }
 

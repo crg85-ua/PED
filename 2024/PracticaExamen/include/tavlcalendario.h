@@ -39,7 +39,7 @@ public:
     bool operator!=(TAVLCalendario&);
     bool EsVacio();
     bool Insertar( const TCalendario&);
-    bool Buscar(TCalendario&);
+    bool Buscar( const TCalendario&);
     bool Borrar(TCalendario&);
     int Altura();
     int Nodos() const;
