@@ -72,7 +72,7 @@ TListaCalendario::TListaCalendario(){
 }
 
 TListaCalendario::TListaCalendario(const TListaCalendario &lista) {
-    this->primero = lista.primero;
+    this->primero = NULL;
     *this = lista;   
 
 }
@@ -91,29 +91,33 @@ TListaCalendario::~TListaCalendario() {
 }
 
 TListaCalendario &TListaCalendario::operator=(const TListaCalendario &listaCalendario) {
-    TNodoCalendario *primerNodo;
-    TNodoCalendario *nuevoNodo;
-    TNodoCalendario *ultimoNodo;
+     if (this != &listaCalendario) {
+        // Delete current list
+        TNodoCalendario *nodo = this->primero;
+        while (nodo) {
+            TNodoCalendario *nodoToDelete = nodo;
+            nodo = nodo->siguiente;
+            delete nodoToDelete;
+        }
 
-    if (this != &listaCalendario)
-    {
-        this->~TListaCalendario();
-        primerNodo = listaCalendario.primero;
-        ultimoNodo = NULL;
-        while (primerNodo)
-        {   
-            nuevoNodo = new TNodoCalendario();
-            if (this->primero == NULL)
-            {
-                this->primero = nuevoNodo;
-            }else{
-                ultimoNodo->siguiente = nuevoNodo;
+        // Copy new list
+        TNodoCalendario *nodoCopy = listaCalendario.primero;
+        TNodoCalendario *lastNode = NULL;
+        while (nodoCopy) {
+            TNodoCalendario *newNode = new TNodoCalendario();
+            newNode->c = nodoCopy->c;
+
+            if (lastNode == NULL) {
+                this->primero = newNode;
+            } else {
+                lastNode->siguiente = newNode;
             }
-            ultimoNodo = nuevoNodo;
-            primerNodo = primerNodo->siguiente;
-        }       
+
+            lastNode = newNode;
+            nodoCopy = nodoCopy->siguiente;
+        }
     }
-    
+
     return *this;
 }
 
@@ -138,7 +142,7 @@ bool TListaCalendario::operator==(const TListaCalendario &listaCalendario) {
 
 TListaCalendario TListaCalendario::operator+( const TListaCalendario &listaCalendario) const {
     TListaCalendario lista = *this;
-    TNodoCalendario *nodo = this->primero;
+    TNodoCalendario *nodo = listaCalendario.primero;
 
     while (nodo)
     {
@@ -151,7 +155,7 @@ TListaCalendario TListaCalendario::operator+( const TListaCalendario &listaCalen
 
 TListaCalendario TListaCalendario::operator-(const TListaCalendario &listaCalendario) const {
     TListaCalendario lista = *this;
-    TNodoCalendario *nodo = this->primero;
+    TNodoCalendario *nodo = listaCalendario.primero;
 
     while (nodo)
     {
@@ -163,61 +167,58 @@ TListaCalendario TListaCalendario::operator-(const TListaCalendario &listaCalend
 }
 
 bool TListaCalendario::Insertar(const TCalendario &calendario) {
-    TNodoCalendario *nuevoNodo, *actualNodo, *anteriorNodo;
-    bool mayor, insertar;
-    mayor=insertar=false;
-    actualNodo = NULL;
-    anteriorNodo = primero;
-    //Creamos el nuevo nodo con los datos del calendario
-    nuevoNodo = new TNodoCalendario();
-    nuevoNodo->c=calendario;   
-    while(anteriorNodo != NULL && !mayor){
-        if(anteriorNodo->c > calendario){
-            mayor = true;
-        }
-        else{
-            if(anteriorNodo->c == calendario){ 
-                mayor = false;
-            }
-            else{
-                actualNodo = anteriorNodo;
-                anteriorNodo = anteriorNodo->siguiente;
-            }
-        }
+   // Implement insertion logic
+    TNodoCalendario *newNode = new TNodoCalendario();
+    newNode->c = calendario;
+    
+    if (this->EsVacia() || calendario < this->primero->c)
+    {
+        newNode->siguiente = this->primero;
+        this->primero = newNode;
+        return true;
     }
-    //Cuidao ahí
-    if(anteriorNodo == NULL){
-        mayor = true;
-    }
-    //Posiciones
-    if(mayor){
-        //Al final
-        if(anteriorNodo == NULL && actualNodo != NULL){
-            nuevoNodo->siguiente = anteriorNodo;
-            actualNodo->siguiente = nuevoNodo;
-        }
-        else{
-            //Al principio
-            if(actualNodo == NULL){
-                nuevoNodo->siguiente = anteriorNodo;
-                primero = nuevoNodo;
-            }
-            //en medio
-            else{
-                if(anteriorNodo != NULL && actualNodo != NULL){
-                    actualNodo->siguiente = nuevoNodo;
-                    nuevoNodo->siguiente = anteriorNodo;
-                }
-                
-            }
-        }
-        insertar = true;
-    }
-    return insertar;
+    
+    TNodoCalendario *aux = this->primero;
+    while (aux->siguiente != NULL && aux->siguiente->c < calendario) aux = aux->siguiente;
+    
+    newNode->siguiente = aux->siguiente;
+    aux->siguiente = newNode;
+    
+    return true;
 }
 
 bool TListaCalendario::Borrar( TCalendario &calendario) {
-    return Borrar( calendario.Dia(), calendario.Mes(), calendario.Anyo());
+    TNodoCalendario *nodo = this->primero;
+    TNodoCalendario *nodoAnterior = NULL;
+    bool encontrado = false;
+
+    while (nodo)
+    {
+        if (nodo->c == calendario)
+        {
+            encontrado = true;
+            TNodoCalendario *nodoToDelete = nodo;
+            nodo = nodo->siguiente;
+
+            if (nodoToDelete == this->primero)
+            {
+                this->primero = nodo;
+            }
+            else
+            {
+                nodoAnterior->siguiente = nodo;
+            }
+
+            delete nodoToDelete;
+        }
+        else
+        {
+            nodoAnterior = nodo;
+            nodo = nodo->siguiente;
+        }
+    }
+
+    return encontrado;
 }
 
 bool TListaCalendario::Borrar( TListaPos &listaPos) {
@@ -256,27 +257,42 @@ bool TListaCalendario::Borrar( TListaPos &listaPos) {
 }
 
 bool TListaCalendario::Borrar(int dia, int mes, int anyo) {
-    TCalendario fechaABorrar(dia, mes, anyo, NULL);
+
+    TNodoCalendario *nodo = this->primero;
     TNodoCalendario *nodoAnterior = NULL;
-    TNodoCalendario *nodoActual = this->primero;
+    bool encontrado = false;
 
-    while (nodoActual) {
-        if (nodoActual->c == fechaABorrar) {
-            if (nodoActual == this->primero)
-                this->primero = nodoActual->siguiente;
+    while (nodo)
+    {
+        if (nodo->c.Anyo() < anyo || (nodo->c.Anyo() == anyo && nodo->c.Mes() < mes) 
+        || (nodo->c.Anyo() == anyo && nodo->c.Mes() == mes && nodo->c.Dia() < dia))
+        {
+            encontrado = true;
+            TNodoCalendario *nodoToDelete = nodo;
+            nodo = nodo->siguiente;
+
+            if (nodoToDelete == this->primero)
+            {
+                this->primero = nodo;
+            }
             else
-                nodoAnterior->siguiente = nodoActual->siguiente;
+            {
+                nodoAnterior->siguiente = nodo;
+            }
 
-            delete nodoActual;
-            return true; // Elemento borrado exitosamente
+            delete nodoToDelete;
         }
-
-        nodoAnterior = nodoActual;
-        nodoActual = nodoActual->siguiente;
+        else
+        {
+            nodoAnterior = nodo;
+            nodo = nodo->siguiente;
+        }
     }
 
-    return false; // No se encontró el elemento en la lista
+    return encontrado;
 }
+
+
 
 bool TListaCalendario::EsVacia() const {
     return primero == NULL;

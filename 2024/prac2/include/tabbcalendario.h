@@ -13,7 +13,7 @@ private:
     TNodoABB *raiz;
 
     // AUXILIAR: devuelve el recorrido en INORDEN
-    void InordenAux(TVectorCalendario &, int &) const;
+    void InordenAux( TVectorCalendario &, int &) const;
     // AUXILIAR: devuelve el recorrido en PREORDEN
     void PreordenAux(TVectorCalendario &, int &) const;
     // AUXILIAR: devuelve el recorrido en POSTORDEN
@@ -29,7 +29,7 @@ public:
     ~TABBCalendario();
 
     TABBCalendario & operator=(const TABBCalendario &);
-
+    bool operator==(const TABBCalendario &) const;
 
     //Métodos
     bool EsVacio() const;
@@ -45,13 +45,13 @@ public:
     TVectorCalendario Postorden() const;
     TVectorCalendario Niveles() const;
 
-    bool Maximo(TCalendario &) const;
-    bool Minimo(TCalendario &) const;
+    TCalendario Maximo() const;
+    TCalendario Minimo() const;
 
     friend ostream & operator<<(ostream &, const TABBCalendario &);
 
-    TABBCalendario operator+(const TABBCalendario &);
-    TABBCalendario operator-(const TABBCalendario &);
+    TABBCalendario operator+(const TABBCalendario &) const;
+    TABBCalendario operator-(const TABBCalendario &) const;
 
 };
 

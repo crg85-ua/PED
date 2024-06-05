@@ -52,16 +52,16 @@ public:
     bool ModFecha(int, int, int);
 
     //Sobrecarga del operador ==
-    bool operator==(const TCalendario&);
+    bool operator==(const TCalendario&) const;
 
     //Sobrecarga del operador !=
     bool operator!=(const TCalendario&);
 
     //Sobrecarga del operador <
-    bool operator<(const TCalendario&);
+    bool operator<(const TCalendario&) const;
 
     //Sobrecarga del operador >
-    bool operator>(const TCalendario&);
+    bool operator>(const TCalendario&) const;
 
     //TCalendario vacío
     bool EsVacio();

@@ -70,8 +70,6 @@ TABBCalendario::TABBCalendario(const TABBCalendario &abb){
     else{
         raiz = NULL;
     }
-
-    return *this;
 }
 
 // Assignment operator
@@ -89,6 +87,19 @@ TABBCalendario &TABBCalendario::operator=(const TABBCalendario &abb){
     return *this;
 }
 
+bool TABBCalendario::operator==(const TABBCalendario &abb) const{
+    //Check
+    if(this->EsVacio() && abb.EsVacio()){
+        return true;
+    }
+    else if((!this->EsVacio() && abb.EsVacio()) || (this->EsVacio() && !abb.EsVacio())){
+        return false;
+    }else if(!this->EsVacio() && !abb.EsVacio()){
+        return this->Inorden() == abb.Inorden();
+    }
+    return false;
+}
+
 // Insert a TCalendario into the tree
 bool TABBCalendario::Insertar(const TCalendario &cal){
     //Check
@@ -97,15 +108,23 @@ bool TABBCalendario::Insertar(const TCalendario &cal){
         raiz->item = cal;
         return true;
     }
-    else if(cal < raiz->item){
-        return raiz->iz.Insertar(cal);
-    }
-    else if(cal > raiz->item){
-        return raiz->de.Insertar(cal);
-    }
     else{
-        return false;
+        if (!this->Buscar(cal))
+        {
+            if(cal < raiz->item){
+                return raiz->iz.Insertar(cal);
+            }
+            else if(cal > raiz->item){
+                return raiz->de.Insertar(cal);
+            }
+            else{
+                return false;
+            }
+        }
     }
+
+    return false;       
+
 }
 
 // Remove a TCalendario from the tree
@@ -130,10 +149,9 @@ bool TABBCalendario::Borrar(const TCalendario &cal){
                 delete aux;
             }
             else{
-                TCalendario cal;
-                raiz->de.Minimo(cal);
-                raiz->item = cal;
-                raiz->de.Borrar(cal);
+                TCalendario aux = raiz->iz.Maximo();
+                raiz->item = aux;
+                raiz->iz.Borrar(aux );
             }
             return true;
         }
@@ -171,33 +189,31 @@ bool TABBCalendario::Buscar(const TCalendario &cal) const{
 }
 
 // Get the minimum TCalendario in the tree
-bool TABBCalendario::Minimo(TCalendario &cal) const{
+TCalendario TABBCalendario::Minimo() const{
     //Check
     if(!EsVacio()){
         if(raiz->iz.EsVacio()){
-            cal = raiz->item;
-            return true;
+            return raiz->item;
         }
         else{
-            return raiz->iz.Minimo(cal);
+            return raiz->iz.Minimo();
         }
     }
-    return false;
+    return TCalendario();
 }
 
 // Get the maximum TCalendario in the tree
-bool TABBCalendario::Maximo(TCalendario &cal) const{
+TCalendario TABBCalendario::Maximo() const{
     //Check
     if(!EsVacio()){
         if(raiz->de.EsVacio()){
-            cal = raiz->item;
-            return true;
+            return raiz->item;
         }
         else{
-            return raiz->de.Maximo(cal);
+            return raiz->de.Maximo();
         }
     }
-    return false;
+    return TCalendario();
 }
 
 // Get the height of the tree
@@ -240,18 +256,16 @@ int TABBCalendario::NodosHoja() const{
 
 // In-order traversal of the tree
 TVectorCalendario TABBCalendario::Inorden() const{
-    //Check
-    if(!EsVacio()){
-        int pos = 1;
-        TVectorCalendario vec(Nodos());
-        InordenAux(vec, pos);
-        return vec;
-    }
+    int pos = 1;
+    TVectorCalendario vec(Nodos());
+    InordenAux(vec, pos);
+    return vec;
+    
 }
 
 // In-order traversal of the tree with position
 void TABBCalendario::InordenAux(TVectorCalendario &vec, int &pos) const{
-    //Check
+    
     if(!EsVacio()){
         raiz->iz.InordenAux(vec, pos);
         vec[pos] = raiz->item;
@@ -262,18 +276,15 @@ void TABBCalendario::InordenAux(TVectorCalendario &vec, int &pos) const{
 
 // Pre-order traversal of the tree
 TVectorCalendario TABBCalendario::Preorden() const{
-    //Check
-    if(!EsVacio()){
-        int pos = 1;
-        TVectorCalendario vec(Nodos());
-        PreordenAux(vec, pos);
-        return vec;
-    }
+    int pos = 1;
+    TVectorCalendario vec(Nodos());
+    PreordenAux(vec, pos);
+    return vec;
 }
 
 // Pre-order traversal of the tree with position
 void TABBCalendario::PreordenAux(TVectorCalendario &vec, int &pos) const{
-    //Check
+    
     if(!EsVacio()){
         vec[pos] = raiz->item;
         pos++;
@@ -283,19 +294,15 @@ void TABBCalendario::PreordenAux(TVectorCalendario &vec, int &pos) const{
 }
 
 // Post-order traversal of the tree
-TVectorCalendario TABBCalendario::Postorden() const{
-    //Check
-    if(!EsVacio()){
-        int pos = 1;
-        TVectorCalendario vec(Nodos());
-        PostordenAux(vec, pos);
-        return vec;
-    }
+TVectorCalendario TABBCalendario::Postorden() const{    
+    int pos = 1;
+    TVectorCalendario vec(Nodos());
+    PostordenAux(vec, pos);
+    return vec;    
 }
 
 // Post-order traversal of the tree with position
 void TABBCalendario::PostordenAux(TVectorCalendario &vec, int &pos) const{
-    //Check
     if(!EsVacio()){
         raiz->iz.PostordenAux(vec, pos);
         raiz->de.PostordenAux(vec, pos);
@@ -306,7 +313,7 @@ void TABBCalendario::PostordenAux(TVectorCalendario &vec, int &pos) const{
 
 // Level-order traversal of the tree
 TVectorCalendario TABBCalendario::Niveles() const{
-    //Check
+    TVectorCalendario error = TVectorCalendario();
     if(!EsVacio()){
         TVectorCalendario vec(Nodos());
         queue<TNodoABB*> cola;
@@ -324,6 +331,39 @@ TVectorCalendario TABBCalendario::Niveles() const{
                 cola.push(nodo->de.raiz);
             }
         }
+        return vec;
+    }else{
+        return error;
     }
+
 }
 
+ostream& operator<<(ostream &os, TABBCalendario &abbC){
+	os << abbC.Niveles() << endl;
+	return os;
+}
+
+TABBCalendario TABBCalendario::operator+(const TABBCalendario &abb) const {
+    TABBCalendario aux(*this);
+    if(!abb.EsVacio()){
+        TVectorCalendario vec = abb.Inorden();
+        for(int i = 1; i <= vec.Tamano(); i++){
+            aux.Insertar(vec[i]);
+        }
+    }
+    return aux;
+}
+
+TABBCalendario TABBCalendario::operator-(const TABBCalendario &abb) const {
+    TABBCalendario aux;
+    if(!abb.EsVacio()){
+        TVectorCalendario vec = this->Inorden();
+        for(int i = 1; i <= vec.Tamano(); i++){
+            if (!abb.Buscar(vec[i]))
+            {
+                aux.Insertar(vec[i]);
+            }            
+        }
+    }
+    return aux;
+}

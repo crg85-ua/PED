@@ -1,6 +1,8 @@
 #include "tcalendario.h"
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
+#include <cstring>
 
     const int DIAS_EN_MES[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // Días en cada mes (enero a diciembre)
 
@@ -21,15 +23,15 @@
             {
                 if (meses31.count(mes) > 0)
                 {
-                    correct = (dia <= 31);              
+                    correct = (dia <= 31 && dia > 0);              
                     
                     
                 } else if (mes == 2){
                     //Si el año es bisiesto
-                    correct = (esBisiesto(anyo) ? dia <= 29 : dia <= 28);
+                    correct = (esBisiesto(anyo) ? dia <= 29 : dia <= 28) && dia > 0;
                     
                 }else{
-                    correct = (dia <= 30);                
+                    correct = (dia <= 30 && dia > 0);                
                 }
             }
             
@@ -154,7 +156,14 @@
             }
             diasRestantes += DIAS_EN_MES[mes];
         }
-        return TCalendario(diasRestantes, mes, anyo, this->mensaje);
+
+        if (fechaCorrecta(diasRestantes, mes, anyo))
+        {
+            return TCalendario(diasRestantes, mes, anyo, this->mensaje);
+        } else {
+            return TCalendario();
+        }
+        
 
     }
 
@@ -170,7 +179,7 @@
     TCalendario& TCalendario::operator++(){
         this->dia++;
         if(this->dia == DIAS_EN_MES[this->mes]){
-            this->dia = 1;
+            this->dia = 0;
             this->mes++;
             if (this->mes == 13)
             {
@@ -224,23 +233,24 @@
             this->mensaje = NULL;
         }else{
             this->mensaje = new char[strlen(mensaje)+1];
-            strcpy(mensaje, mensaje);
+            strcpy(this->mensaje, mensaje);
         }
         return true;
     }
 
     // //Sobrecarga del operador ==
-    bool TCalendario::operator==(const TCalendario& cal){
-        // if (this->mensaje == NULL && cal.mensaje == NULL)
-        // {
-        //     return (this->dia == cal.dia && this->mes == cal.mes && this->anyo == cal.anyo && true);
+    bool TCalendario::operator==(const TCalendario& cal) const{
+        if (this->mensaje == NULL && cal.mensaje == NULL)
+        {
+            return (this->dia == cal.dia && this->mes == cal.mes && this->anyo == cal.anyo && true);
 
-        // }else if((this->mensaje == NULL && cal.mensaje != NULL) || (this->mensaje != NULL && cal.mensaje == NULL)){
-
-        //     return false;
-        // }
+        }else if (this->mensaje == NULL || cal.mensaje == NULL){
+            return false;
+        }else{
+            
+            return (this->dia == cal.dia && this->mes == cal.mes && this->anyo == cal.anyo && strcmp(this->mensaje, cal.mensaje) == 0);
+        }
         
-        return (this->dia == cal.dia && this->mes == cal.mes && this->anyo == cal.anyo && strcmp(this->mensaje, cal.mensaje) == 0);
     }
 
     // //Sobrecarga del operador !=
@@ -249,17 +259,26 @@
     }
 
     // //Sobrecarga del operador <
-    bool TCalendario::operator<(const TCalendario& cal){
-        return !(*this > cal);        
+    bool TCalendario::operator<(const TCalendario& cal) const{
+        bool fechaIgual = (this->anyo == cal.anyo && this->mes == cal.mes && this->dia == cal.dia);
+        bool ambosMsgNotNull = (this->mensaje != NULL && cal.mensaje != NULL);
+        bool sizeMsg = ambosMsgNotNull ? strcmp(this->mensaje, cal.mensaje) == 0 : true;
+        if (fechaIgual && ambosMsgNotNull && sizeMsg){
+            return false;
+        }else{
+            return !(*this > cal);
+        }
     }
 
     // //Sobrecarga del operador >
-    bool TCalendario::operator>(const TCalendario& cal){
-        bool fechaMayor = (this->anyo >= cal.anyo && this->mes >= cal.mes && this->dia > cal.dia);
+    bool TCalendario::operator>(const TCalendario& cal) const {
+        bool fechaMayor = (this->anyo > cal.anyo) || 
+        (this->anyo == cal.anyo && this->mes > cal.mes) || 
+        (this->anyo == cal.anyo && this->mes == cal.mes && this->dia > cal.dia);
         bool fechaIgual = (this->anyo == cal.anyo && this->mes == cal.mes && this->dia == cal.dia);
         bool ambosMsgNotNull = (this->mensaje != NULL && cal.mensaje != NULL);
-
-        if (fechaMayor || (fechaIgual && ambosMsgNotNull && strcmp(this->mensaje, cal.mensaje) > 0))
+        bool thisBiggerMsg = ambosMsgNotNull ? strcmp(this->mensaje, cal.mensaje) > 0 : (this->mensaje != NULL ? true : false);
+        if (fechaMayor || (fechaIgual && thisBiggerMsg))
         {
             return true;
         }else 
@@ -298,8 +317,6 @@
     }
 
     // //Devuelve el año
-    #include <string> // Include the <string> header to access the to_string function
-
     int TCalendario::Anyo(){
         return this->anyo;
     }
@@ -313,5 +330,4 @@
         os << (cal.dia < 10 ? "0" + to_string(cal.dia) : to_string(cal.dia))  << "/" << (cal.mes < 10 ? "0" + to_string(cal.mes) : to_string(cal.mes)) << "/" << cal.anyo << " \"" << (cal.mensaje != NULL ? cal.mensaje : "") << "\"";
         return os;
     }
-
 

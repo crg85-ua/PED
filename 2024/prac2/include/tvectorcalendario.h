@@ -1,5 +1,5 @@
-#ifndef _TVECTORC
-#define __TVECTORC
+#ifndef TVECTORCALENDARIO_H
+#define TVECTORCALENDARIO_H
 #include "tcalendario.h"
 #include <iostream>
 

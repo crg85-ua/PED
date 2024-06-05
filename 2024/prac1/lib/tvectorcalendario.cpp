@@ -52,7 +52,7 @@
 
     // //Sobrecarga del operador =
     TVectorCalendario& TVectorCalendario::operator=(const TVectorCalendario& vector){
-        if (this != &vector && vector.tamano > 0)
+        if (this != &vector)
         {
             this->~TVectorCalendario();
             this->tamano = vector.tamano;
